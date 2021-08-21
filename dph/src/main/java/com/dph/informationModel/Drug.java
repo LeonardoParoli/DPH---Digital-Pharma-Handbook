@@ -2,28 +2,57 @@ package com.dph.informationModel;
 
 public class Drug {
 
+	private String code;
+	private String name;
+	private String description;
+	
 	public Drug(String code, String name, String description) {
-		// TODO Auto-generated constructor stub
+		if(code.isBlank() || code.isEmpty()) {
+			throw new IllegalArgumentException("Cannot create new Drug entry with blank or empty Code");
+		}
+		if( name.isBlank()|| name.isEmpty()){
+			throw new IllegalArgumentException("Cannot create new Drug entry with blank or empty Name");
+		}
+		if(description.isBlank()|| description.isEmpty()) {
+			throw new IllegalArgumentException("Cannot create new Drug entry with blank or empty Description");
+		}
+		this.code = code;
+		this.name = name;
+		this.description = description;
 	}
 
 	public String getCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return code;
 	}
-	
+
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
-	
+
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return description;
 	}
 
 	public boolean setDescription(String description) {
-		// TODO Auto-generated method stub
-		return false;
+		if(description.isBlank()|| description.isEmpty()) {
+			throw new IllegalArgumentException("Cannot modify Drug description to blank or empty");
+		}
+		this.description = description;
+		return true;
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(Drug.class.isInstance(obj)) {
+			Drug drug = (Drug) obj;
+			if(drug.getCode().equals(this.code)
+					&& drug.getName().equals(this.name)
+					&& drug.getDescription().equals(this.description)) {
+				return true;
+			}else {
+				return false;}
+		}else {
+			return false;
+		}
+	}
 }

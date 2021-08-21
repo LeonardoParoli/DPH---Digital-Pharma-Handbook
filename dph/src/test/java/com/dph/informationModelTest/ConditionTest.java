@@ -85,9 +85,9 @@ public class ConditionTest {
 			Dosage dosageOne = new Dosage(new Drug("001","drugOne","drugOne description"),1); //same code
 			Dosage dosageTwo = new Dosage(new Drug("001","drugTwo","drugTwo description"),2); //same code
 			Dosage dosageThree = new Dosage(new Drug("003","drugThree","drugThree description"),3);
-			dosageList.add(dosageOne);
-			dosageList.add(dosageTwo);
-			dosageList.add(dosageThree);
+			badDosageList.add(dosageOne);
+			badDosageList.add(dosageTwo);
+			badDosageList.add(dosageThree);
 			@SuppressWarnings("unused")
 			Condition badCondition = new Condition(code, name, badDosageList);
 		}).isInstanceOf(IllegalArgumentException.class)
@@ -175,7 +175,7 @@ public class ConditionTest {
 	}
 	
 	@Test
-	public void conditionEqualsFailByDifferentDrugListTest() {
+	public void conditionEqualsFailByDifferentDosageListTest() {
 		List<Dosage> differentDosageList = new ArrayList<Dosage>();
 		Dosage differentdrugOne = new Dosage(new Drug("001different","drugOne","drugOne description"),1);
 		Dosage drugTwo = new Dosage(new Drug("002","drugTwo","drugTwo description"),2);
@@ -188,10 +188,29 @@ public class ConditionTest {
 	}
 	
 	@Test
-	public void conditionEqualsFailByEmptyDrugListTest() {
+	public void conditionEqualsFailByDifferentSingleDosageTest() {
+		List<Dosage> differentDosageList = new ArrayList<Dosage>();
+		Dosage differentdrugOne = new Dosage(new Drug("001","drugOne","drugOne description"),1);
+		Dosage drugTwo = new Dosage(new Drug("002","drugTwo","drugTwo description"),2);
+		Dosage drugThree = new Dosage(new Drug("003","drugThree","drugThree description"),2); //different dosage value
+		differentDosageList.add(differentdrugOne);
+		differentDosageList.add(drugTwo);
+		differentDosageList.add(drugThree);
+		Condition otherCondition = new Condition(code,name,differentDosageList);
+		assertThat(condition.equals(otherCondition)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+	}
+	
+	@Test
+	public void conditionEqualsFailByEmptyDosageListTest() {
 		List<Dosage> differentDosageList = new ArrayList<Dosage>();
 		Condition otherCondition = new Condition(code,name,differentDosageList);
 		assertThat(condition.equals(otherCondition)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+	}
+	
+	@Test
+	public void conditionEqualsFailBydifferentClassTest() {
+		Object object = new Object();
+		assertThat(condition.equals(object)).isNotNull().isInstanceOf(Boolean.class).isFalse();
 	}
 	
 	@After

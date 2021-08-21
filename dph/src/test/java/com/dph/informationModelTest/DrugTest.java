@@ -144,6 +144,12 @@ public class DrugTest {
 		assertThat(otherDrug.equals(drug)).isNotNull().isInstanceOf(Boolean.class).isFalse();
 	}
 	
+	@Test
+	public void DrugEqualsFailByDifferentClassTest() {
+		Object obj = new Object();
+		assertThat(drug.equals(obj)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+	}
+	
 	@After
 	public void teardown() {
 		drug=null;
