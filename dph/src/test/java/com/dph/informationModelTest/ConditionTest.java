@@ -19,6 +19,7 @@ public class ConditionTest {
 	private String code;
 	private Condition condition;
 	private List<Dosage> dosageList;
+	
 	@Before
 	public void setup() {
 		name="Test Name";
