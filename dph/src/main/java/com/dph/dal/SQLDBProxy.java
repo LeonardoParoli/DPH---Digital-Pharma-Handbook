@@ -6,7 +6,7 @@ import com.dph.informationModel.Condition;
 import com.dph.informationModel.Drug;
 
 public class SQLDBProxy implements DBProxy {
-
+  
 	@Override
 	public List<Condition> findAllConditions() {
 		// TODO Auto-generated method stub

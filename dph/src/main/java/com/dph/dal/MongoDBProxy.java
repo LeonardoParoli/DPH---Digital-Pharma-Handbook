@@ -17,7 +17,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
 public class MongoDBProxy implements DBProxy {
-	
+  
 	private MongoCollection<Document> conditionCollection;
 	private MongoCollection<Document> drugCollection;
 	
@@ -189,4 +189,5 @@ public class MongoDBProxy implements DBProxy {
 		}
 		
 	}
+
 }

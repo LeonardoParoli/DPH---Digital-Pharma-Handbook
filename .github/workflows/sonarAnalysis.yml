@@ -5,10 +5,14 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+  
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+         workdir: dph
     steps:
       - uses: actions/checkout@v2
         with:
@@ -34,3 +38,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=LeonardoParoli_DPH---Digital-Pharma-Handbook
+        working-directory: ${{ env.workdir }}
