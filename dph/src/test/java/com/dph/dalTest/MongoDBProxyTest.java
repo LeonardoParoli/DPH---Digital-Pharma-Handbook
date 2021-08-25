@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -186,9 +185,9 @@ public class MongoDBProxyTest {
 		list.add(dosage);
 		Condition condition = new Condition("C1", "TestCondition",list);
 		proxy.save(condition);
-		assertThat(readAllConditionsFromDatabase().size()==1).isTrue();
-		Condition condition2 = readAllConditionsFromDatabase().get(0);
-		assertThat(condition.equals(condition2)).isTrue();
+		assertThat(proxy.findAllConditions())
+			.containsExactly(
+					new Condition("C1", "TestCondition",list));
 	}
 	
 	@Test
@@ -247,9 +246,15 @@ public class MongoDBProxyTest {
 		dosages.add(new Dosage(new Drug("001","test1","testDesc"),1.0));
 		dosages.add(new Dosage(new Drug("002","test2","testDesc"),1.0));
 		addTestConditionToDatabase("ConditionCode1", "ConditionName1", dosages);
+		assertThat(proxy.findAllConditions())
+		.containsExactly(
+			new Condition("ConditionCode1", "ConditionName1", dosages));
 		dosages.add(new Dosage(new Drug("003", "test3", "testDesc"),2.0));
 		Condition updatedCondition = new Condition("ConditionCode1", "DifferentConditionName", dosages);
 		proxy.updateCondition(updatedCondition);
+		assertThat(proxy.findAllConditions())
+		.containsExactly(
+			new Condition("ConditionCode1", "DifferentConditionName", dosages));
 	}
 	
 	@Test
@@ -287,6 +292,9 @@ public class MongoDBProxyTest {
 		addTestDrugToDatabase("001","test1","testDesc");
 		Drug updatedDrug = new Drug("001", "test1", "UpdatedTestDesc");
 		proxy.updateDrug(updatedDrug);
+		assertThat(proxy.findAllDrugs())
+			.containsExactly(
+					new Drug("001", "test1", "UpdatedTestDesc"));
 	}
 	
 	@Test
@@ -362,6 +370,7 @@ public class MongoDBProxyTest {
 	private List<Condition> readAllConditionsFromDatabase() throws IOException {
 		List<Condition> conditions = new ArrayList<>();
 		for(Document document : conditionCollection.find()) {
+			@SuppressWarnings("unchecked")
 			List<Document> dosages = (List<Document>) document.get("dosageList");
 			List<Dosage> dsgList= new ArrayList<>();
 			for(Document dosage : dosages) {

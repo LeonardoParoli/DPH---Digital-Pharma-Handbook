@@ -23,8 +23,8 @@ public class DosageTest {
 
 	@Test
 	public void newDosageCannotBeInconsistentTest() {
-		assertThat(dosage.getDrug()).isNotNull().isInstanceOf(Drug.class);
-		assertThat(dosage.getDrugDosage()).isNotNull().isInstanceOf(Double.class).isEqualTo(1.0);
+		assertThat(dosage.getDrug()).isInstanceOf(Drug.class);
+		assertThat(dosage.getDrugDosage()).isInstanceOf(Double.class).isEqualTo(1.0);
 	}
 
 	@Test
@@ -50,42 +50,53 @@ public class DosageTest {
 	@Test
 	public void setDosageTest() {
 		assertThat(dosage.getDrugDosage()).isEqualTo(1.0);
-		assertThat(dosage.setDosage(2.0)).isNotNull().isInstanceOf(Boolean.class).isTrue();
+		assertThat(dosage.setDosage(2.0)).isInstanceOf(Boolean.class).isTrue();
 		assertThat(dosage.getDrugDosage()).isEqualTo(2.0);
 	}
 
 	@Test
-	public void setDosageFailTest(){
+	public void setDosageFailTest() {
 		assertThatThrownBy(() -> {
 			dosage.setDosage(-1.0);
 		}).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Dosage value entry must be positive.");
+		assertThatThrownBy(() -> {
+			dosage.setDosage(0.0);
+		}).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Dosage value entry must be positive.");
+		
 	}
-	
+
 	@Test
 	public void equalsTest() {
-		Dosage sameDosage = new Dosage(drug,volume);
-		assertThat(dosage.equals(sameDosage)).isNotNull().isInstanceOf(Boolean.class).isTrue();
+		Dosage sameDosage = new Dosage(drug, volume);
+		assertThat(dosage.equals(dosage)).isInstanceOf(Boolean.class).isTrue();
+		assertThat(dosage.hashCode() == dosage.hashCode()).isInstanceOf(Boolean.class).isTrue();
+		assertThat(dosage.equals(sameDosage)).isInstanceOf(Boolean.class).isTrue();
+		assertThat(dosage.hashCode() == sameDosage.hashCode()).isInstanceOf(Boolean.class).isTrue();
 	}
-	
+
 	@Test
 	public void equalsFalseByDifferentDrugTest() {
-		Drug differentDrug = new Drug("002","difDrug", "difDrugDesc");
+		Drug differentDrug = new Drug("002", "difDrug", "difDrugDesc");
 		Dosage differentDosage = new Dosage(differentDrug, 2.0);
-		assertThat(dosage.equals(differentDosage)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+		assertThat(dosage.equals(differentDosage)).isInstanceOf(Boolean.class).isFalse();
+		assertThat(dosage.hashCode() == differentDosage.hashCode()).isInstanceOf(Boolean.class).isFalse();
+		
 	}
-	
+
 	@Test
 	public void equalsFalseByDifferentDosageTest() {
-		Dosage differentDosage = new Dosage(drug,2.0);
-		assertThat(dosage.equals(differentDosage)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+		Dosage differentDosage = new Dosage(drug, 2.0);
+		assertThat(dosage.equals(differentDosage)).isInstanceOf(Boolean.class).isFalse();
+		assertThat(dosage.hashCode() == differentDosage.hashCode()).isInstanceOf(Boolean.class).isFalse();
 	}
-	
+
 	@Test
 	public void equalsDifferentClassTest() {
-		Drug drug = new Drug("002","DrugNotDosage", "DrugDesc");
-		assertThat(dosage.equals(drug)).isNotNull().isInstanceOf(Boolean.class).isFalse();
+		Drug drug = new Drug("002", "DrugNotDosage", "DrugDesc");
+		assertThat(dosage.equals(drug)).isInstanceOf(Boolean.class).isFalse();
+		assertThat(dosage.hashCode() == drug.hashCode()).isInstanceOf(Boolean.class).isFalse();
 	}
-	
+
 	@After
 	public void teardown() {
 		drug = null;
