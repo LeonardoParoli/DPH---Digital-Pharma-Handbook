@@ -1,10 +1,10 @@
 package com.dph.informationModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,16 +21,17 @@ public class Condition {
 		if (name.isBlank() || name.isEmpty()) {
 			throw new IllegalArgumentException("Cannot create new Condition entry with blank or empty Name.");
 		}
-		List<String> codeList = new ArrayList<String>();
+
+		List<String> codeList = new ArrayList<>();
 		for (Dosage dosage : dosageList) {
 			codeList.add(dosage.getCode());
 		}
-		Set<String> set = new HashSet<String>(codeList);
+		Set<String> set = new HashSet<>(codeList);
 		if (codeList.size() > set.size()) {
 			throw new IllegalArgumentException(
 					"Cannot create new Condition entry with duplicate entries in associated Drug list.");
 		}
-		HashMap<String, Dosage> pairedMap = new HashMap<String, Dosage>();
+		HashMap<String, Dosage> pairedMap = new HashMap<>();
 		for (Dosage dosage : dosageList) {
 			pairedMap.put(dosage.getCode(), dosage);
 		}
@@ -48,13 +49,9 @@ public class Condition {
 	}
 
 	public boolean hasDrug(String code) {
-		if (dosageList.containsKey(code)) {
-			return true;
-		} else {
-			return false;
-		}
+		return dosageList.containsKey(code);
 	}
-
+	
 	public boolean addDrug(Drug drug, double dosage) {
 		if (this.hasDrug(drug.getCode())) {
 			throw new IllegalArgumentException("Cannot add a drug with code already existing in the condition's list.");
@@ -89,7 +86,7 @@ public class Condition {
 				&& Objects.equals(name, other.name);
 	}
 
-	public HashMap<String, Dosage> getDosageList() {
+	public Map<String, Dosage> getDosageList() {
 		return this.dosageList;
 	}
 }

@@ -63,13 +63,12 @@ public class MongoDBProxy implements DBProxy {
 
 	@Override
 	public boolean hasConditionById(String id) {
-		return conditionCollection.find(Filters.eq("code", id)).first() == null;
-		
+		return conditionCollection.find(Filters.eq("code", id)).first() != null;
 	}
 
 	@Override
 	public boolean hasDrugById(String id) {
-		return drugCollection.find(Filters.eq("code", id)).first() == null;
+		return drugCollection.find(Filters.eq("code", id)).first() != null;
 	}
 
 	@Override
