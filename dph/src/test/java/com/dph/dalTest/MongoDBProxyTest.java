@@ -67,17 +67,18 @@ public class MongoDBProxyTest {
 	
 	@After
 	public void tearDown() {
+		client.getDatabase(DB_NAME).drop();
 		client.close();
 	}
 	
 	@Test
-	public void findAllWhenDatabaseIsEmptyTest() {
+	public void findAllWhenDatabaseIsEmptyTest() throws IOException {
 		assertThat(proxy.findAllConditions()).isInstanceOf(List.class).isEmpty();
 		assertThat(proxy.findAllDrugs()).isInstanceOf(List.class).isEmpty();
 	}
 	
 	@Test
-	public void findAllConditionsWhenDatabaseIsNotEmptyTest() {
+	public void findAllConditionsWhenDatabaseIsNotEmptyTest() throws IOException {
 		addTestDrugToDatabase("001","test1","testDesc");
 		addTestDrugToDatabase("002","test2","testDesc");
 		List<Dosage> dosages = new ArrayList<>();
@@ -89,6 +90,17 @@ public class MongoDBProxyTest {
 			.containsExactly(
 				new Condition("ConditionCode1", "ConditionName1", dosages),
 				new Condition("ConditionCode2", "ConditionName2", dosages));
+	}
+	
+	@Test
+	public void findAllConditionWhenDatabaseIsNotEmptyButInconsistentTest() {
+		List<Dosage> dosages = new ArrayList<>();
+		dosages.add(new Dosage(new Drug("001","test1","testDesc"),1.0));
+		addTestConditionToDatabase("ConditionCode1", "ConditionName1", dosages);
+		assertThatThrownBy(() -> {
+			proxy.findAllConditions();
+		}).isInstanceOf(IOException.class)
+		  .hasMessageContaining("Database doesn't have the required drug entry.");
 	}
 	
 	@Test
@@ -118,7 +130,7 @@ public class MongoDBProxyTest {
 	}
 
 	@Test
-	public void findConditionByIdFoundTest() {
+	public void findConditionByIdFoundTest() throws IOException {
 		addTestDrugToDatabase("001","test1","testDesc");
 		addTestDrugToDatabase("002","test2","testDesc");
 		List<Dosage> dosages = new ArrayList<>();
@@ -131,23 +143,52 @@ public class MongoDBProxyTest {
 	}
 	
 	@Test
-	public void findDrugByIdFoundTest() {
+	public void findDrugByIdFoundTest() throws IOException {
 		addTestDrugToDatabase("001", "test1","testDesc");
 		addTestDrugToDatabase("002", "test2","testDesc");
 		assertThat(proxy.findDrugById("002"))
-			.isEqualTo(new Drug("001", "test1","testDesc"));
+			.isEqualTo(new Drug("002", "test2","testDesc"));
 	}
 	
 	@Test
-	public void saveCondition() throws IOException {
-		Drug drug = new Drug("001", "testDrug", "testDescription");
+	public void hasConditionByIDTest() {
+		addTestDrugToDatabase("001","test1","testDesc");
+		addTestDrugToDatabase("002","test2","testDesc");
+		List<Dosage> dosages = new ArrayList<>();
+		dosages.add(new Dosage(new Drug("001","test1","testDesc"),1.0));
+		dosages.add(new Dosage(new Drug("002","test2","testDesc"),1.0));
+		addTestConditionToDatabase("ConditionCode1", "ConditionName1", dosages);
+		assertThat(proxy.hasConditionById("ConditionCode1")).isInstanceOf(Boolean.class).isTrue();
+	}
+	
+	@Test
+	public void hasConditionByIDFailureByMissingEntryTest() {
+		assertThat(proxy.hasConditionById("ConditionCode1")).isInstanceOf(Boolean.class).isFalse();
+	}
+	
+	@Test
+	public void hasDrugByIDTest() {
+		addTestDrugToDatabase("001", "test1","testDesc");
+		assertThat(proxy.hasDrugById("001")).isInstanceOf(Boolean.class).isTrue();
+	}
+	
+	@Test
+	public void hasDrugByIDFailureByMissingEntryTest() {
+		assertThat(proxy.hasDrugById("001")).isInstanceOf(Boolean.class).isFalse();
+	}
+	
+	@Test
+	public void saveConditionTest() throws IOException {
+		addTestDrugToDatabase("001","testDrug","testDescription");
+		Drug drug = new Drug("001", "testDrug","testDescription");
 		Dosage dosage = new Dosage(drug,1.0);
 		List<Dosage> list = new ArrayList<>();
 		list.add(dosage);
 		Condition condition = new Condition("C1", "TestCondition",list);
 		proxy.save(condition);
-		assertThat(readAllConditionsFromDatabase())
-			.containsExactly(condition);
+		assertThat(readAllConditionsFromDatabase().size()==1).isTrue();
+		Condition condition2 = readAllConditionsFromDatabase().get(0);
+		assertThat(condition.equals(condition2)).isTrue();
 	}
 	
 	@Test
@@ -176,11 +217,11 @@ public class MongoDBProxyTest {
 			Condition condition = new Condition("ConditionCode1", "ConditionName1", dosages);
 			proxy.save(condition);
 		}).isInstanceOf(IOException.class)
-		  .hasMessageContaining("Database doesn't have required Drug entry.");
+		  .hasMessageContaining("Database doesn't have a required Drug entry.");
 	}
 	
 	@Test
-	public void saveDrugTest() {
+	public void saveDrugTest() throws IOException {
 		Drug drug = new Drug("001", "testDrug", "testDescription");
 		proxy.save(drug);
 		assertThat(readAllDrugsFromDatabase())
@@ -198,9 +239,10 @@ public class MongoDBProxyTest {
 	}
 	
 	@Test
-	public void updateConditionTest() {
+	public void updateConditionTest() throws IOException {
 		addTestDrugToDatabase("001","test1","testDesc");
 		addTestDrugToDatabase("002","test2","testDesc");
+		addTestDrugToDatabase("003","test3","testDesc");
 		List<Dosage> dosages = new ArrayList<>();
 		dosages.add(new Dosage(new Drug("001","test1","testDesc"),1.0));
 		dosages.add(new Dosage(new Drug("002","test2","testDesc"),1.0));
@@ -241,7 +283,7 @@ public class MongoDBProxyTest {
 	}
 	
 	@Test
-	public void updateDrugTest() {
+	public void updateDrugTest() throws IOException {
 		addTestDrugToDatabase("001","test1","testDesc");
 		Drug updatedDrug = new Drug("001", "test1", "UpdatedTestDesc");
 		proxy.updateDrug(updatedDrug);
@@ -273,11 +315,11 @@ public class MongoDBProxyTest {
 		assertThatThrownBy(() -> {
 			proxy.deleteCondition("C1");
 		}).isInstanceOf(IOException.class)
-		  .hasMessageContaining("Given Condition code doens't match any existing entry.");
+		  .hasMessageContaining("Given Condition code doesn't match any existing entry.");
 	}
 	
 	@Test
-	public void deleteDrugTest() {
+	public void deleteDrugTest() throws IOException {
 		addTestDrugToDatabase("001", "testDrug", "testDescription");
 		proxy.deleteDrug("001");
 		assertThat(readAllDrugsFromDatabase())
@@ -289,7 +331,7 @@ public class MongoDBProxyTest {
 		assertThatThrownBy(() -> {
 			proxy.deleteDrug("001");
 		}).isInstanceOf(IOException.class)
-		  .hasMessageContaining("Given Drug code doens't match any existing entry.");
+		  .hasMessageContaining("Given Drug code doesn't match any existing entry.");
 	}
 	
 	private void addTestConditionToDatabase(String code, String name, List<Dosage> dosageList) {
@@ -337,8 +379,8 @@ public class MongoDBProxyTest {
 	
 	private List<Drug> readAllDrugsFromDatabase() {
 		return StreamSupport.
-			stream(conditionCollection.find().spliterator(), false)
-				.map(d -> new Drug(""+d.get("id"), ""+d.get("name"),""+ d.get("description")))
+			stream(drugCollection.find().spliterator(), false)
+				.map(d -> new Drug(""+d.get("code"), ""+d.get("name"),""+ d.get("description")))
 				.collect(Collectors.toList());
 	}
 }

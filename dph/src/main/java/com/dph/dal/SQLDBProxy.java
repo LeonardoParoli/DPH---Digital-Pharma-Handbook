@@ -66,4 +66,16 @@ public class SQLDBProxy implements DBProxy {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean hasDrugById(String string) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasConditionById(String string) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
