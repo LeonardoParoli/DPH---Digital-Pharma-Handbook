@@ -31,7 +31,7 @@ public class Dosage {
 	public boolean equals(Object obj) {
 		if (Dosage.class.isInstance(obj)) {
 			Dosage dosage = (Dosage) obj;
-			if (dosage.getDrug().equals(this.drug) && dosage.getDrugDosage() == this.dosage) {
+			if (dosage.getDrug().equals(this.drug) && Double.compare(this.dosage,dosage.getDrugDosage())==0) {
 				return true;
 			} else {
 				return false;
