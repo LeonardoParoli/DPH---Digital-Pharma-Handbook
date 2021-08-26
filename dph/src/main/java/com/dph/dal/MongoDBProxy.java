@@ -20,6 +20,13 @@ public class MongoDBProxy implements DBProxy {
 
 	private MongoCollection<Document> conditionCollection;
 	private MongoCollection<Document> drugCollection;
+	private final static String dosageListKey = "dosageList";
+	private final static String codeKey = "code";
+	private final static String drugCodeKey = "drugCode";
+	private final static String nameKey = "name";
+	private final static String descriptionKey = "description";
+	private final static String dosageKey = "dosage";
+	
 
 	public MongoDBProxy(MongoClient client) {
 		conditionCollection = client.getDatabase(DB_NAME).getCollection(DB_CONDITIONS_COLLECTION_NAME);
@@ -37,18 +44,18 @@ public class MongoDBProxy implements DBProxy {
 
 	private Condition fromDocumentToCondition(Document document) throws IOException {
 		@SuppressWarnings("unchecked")
-		List<Document> dosages = (List<Document>) document.get("dosageList");
+		List<Document> dosages = (List<Document>) document.get(dosageListKey);
 		List<Dosage> dsgList = new ArrayList<>();
 		for (Document dosage : dosages) {
-			Document drugInfo = drugCollection.find(Filters.eq("code", dosage.get("drugCode"))).first();
+			Document drugInfo = drugCollection.find(Filters.eq(codeKey, dosage.get(drugCodeKey))).first();
 			if (drugInfo == null) {
 				throw new IOException("Database doesn't have the required drug entry.");
 			}
 			dsgList.add(new Dosage(
-					new Drug("" + drugInfo.get("code"), "" + drugInfo.get("name"), "" + drugInfo.get("description")),
-					(double) dosage.get("dosage")));
+					new Drug("" + drugInfo.get(codeKey), "" + drugInfo.get(nameKey), "" + drugInfo.get(descriptionKey)),
+					(double) dosage.get(dosage)));
 		}
-		return new Condition("" + document.get("code"), "" + document.get("name"), dsgList);
+		return new Condition("" + document.get(codeKey), "" + document.get(nameKey), dsgList);
 	}
 
 	@Override
@@ -58,23 +65,23 @@ public class MongoDBProxy implements DBProxy {
 	}
 
 	private Drug fromDocumentToDrug(Document d) {
-		return new Drug("" + d.get("code"), "" + d.get("name"), "" + d.get("description"));
+		return new Drug("" + d.get(codeKey), "" + d.get(nameKey), "" + d.get(descriptionKey));
 	}
 
 	@Override
 	public boolean hasConditionById(String id) {
-		return conditionCollection.find(Filters.eq("code", id)).first() != null;
+		return conditionCollection.find(Filters.eq(codeKey, id)).first() != null;
 	}
 
 	@Override
 	public boolean hasDrugById(String id) {
-		return drugCollection.find(Filters.eq("code", id)).first() != null;
+		return drugCollection.find(Filters.eq(codeKey, id)).first() != null;
 	}
 
 	@Override
 	public Condition findConditionById(String id) throws IOException {
 		if (this.hasConditionById(id)) {
-			return fromDocumentToCondition(conditionCollection.find(Filters.eq("code", id)).first());
+			return fromDocumentToCondition(conditionCollection.find(Filters.eq(codeKey, id)).first());
 		} else {
 			throw new IOException("Database contains no Condition entry with given ID.");
 		}
@@ -83,7 +90,7 @@ public class MongoDBProxy implements DBProxy {
 	@Override
 	public Drug findDrugById(String id) throws IOException {
 		if (this.hasDrugById(id)) {
-			return fromDocumentToDrug(drugCollection.find(Filters.eq("code", id)).first());
+			return fromDocumentToDrug(drugCollection.find(Filters.eq(codeKey, id)).first());
 		} else {
 			throw new IOException("Database contains no Drug entry with given ID.");
 		}
@@ -100,10 +107,10 @@ public class MongoDBProxy implements DBProxy {
 			List<Document> dosages = new ArrayList<>();
 			for (Dosage dosage : condition.getDosageList().values()) {
 				dosages.add(
-						new Document().append("drugCode", dosage.getCode()).append("dosage", dosage.getDrugDosage()));
+						new Document().append(drugCodeKey, dosage.getCode()).append(dosageKey, dosage.getDrugDosage()));
 			}
-			conditionCollection.insertOne(new Document().append("code", condition.getCode())
-					.append("name", condition.getName()).append("dosageList", dosages));
+			conditionCollection.insertOne(new Document().append(codeKey, condition.getCode())
+					.append(nameKey, condition.getName()).append(dosageListKey, dosages));
 		} else {
 			throw new IOException("Database already contains a Condition with given code.");
 		}
@@ -112,8 +119,8 @@ public class MongoDBProxy implements DBProxy {
 	@Override
 	public void save(Drug drug) throws IOException {
 		if (!this.hasDrugById(drug.getCode())) {
-			drugCollection.insertOne(new Document().append("code", drug.getCode()).append("name", drug.getName())
-					.append("description", drug.getDescription()));
+			drugCollection.insertOne(new Document().append(codeKey, drug.getCode()).append(nameKey, drug.getName())
+					.append(descriptionKey, drug.getDescription()));
 		} else {
 			throw new IOException("Database already contains a Drug entry with given code.");
 		}
@@ -122,7 +129,7 @@ public class MongoDBProxy implements DBProxy {
 	@Override
 	public void deleteCondition(String id) throws IOException {
 		if (this.hasConditionById(id)) {
-			conditionCollection.deleteOne(Filters.eq("code", id));
+			conditionCollection.deleteOne(Filters.eq(codeKey, id));
 		} else {
 			throw new IOException("Given Condition code doesn't match any existing entry.");
 		}
@@ -132,7 +139,7 @@ public class MongoDBProxy implements DBProxy {
 	@Override
 	public void deleteDrug(String id) throws IOException {
 		if (this.hasDrugById(id)) {
-			drugCollection.deleteOne(Filters.eq("code", id));
+			drugCollection.deleteOne(Filters.eq(codeKey, id));
 		} else {
 			throw new IOException("Given Drug code doesn't match any existing entry.");
 		}
@@ -142,9 +149,9 @@ public class MongoDBProxy implements DBProxy {
 	@Override
 	public void updateDrug(Drug updatedDrug) throws IOException {
 		if (this.hasDrugById(updatedDrug.getCode())) {
-			drugCollection.replaceOne(Filters.eq("code", updatedDrug.getCode()),
-					new Document().append("code", updatedDrug.getCode()).append("name", updatedDrug.getName())
-							.append("description", updatedDrug.getDescription()));
+			drugCollection.replaceOne(Filters.eq(codeKey, updatedDrug.getCode()),
+					new Document().append(codeKey, updatedDrug.getCode()).append(nameKey, updatedDrug.getName())
+							.append(descriptionKey, updatedDrug.getDescription()));
 		} else {
 			throw new IOException("Cannot find required Drug entry in the database.");
 		}
@@ -161,11 +168,11 @@ public class MongoDBProxy implements DBProxy {
 			List<Document> dosages = new ArrayList<>();
 			for (Dosage dosage : updatedCondition.getDosageList().values()) {
 				dosages.add(
-						new Document().append("drugCode", dosage.getCode()).append("dosage", dosage.getDrugDosage()));
+						new Document().append(drugCodeKey, dosage.getCode()).append(dosageKey, dosage.getDrugDosage()));
 			}
-			conditionCollection.replaceOne(Filters.eq("code", updatedCondition.getCode()),
-					new Document().append("code", updatedCondition.getCode()).append("name", updatedCondition.getName())
-							.append("dosageList", dosages));
+			conditionCollection.replaceOne(Filters.eq(codeKey, updatedCondition.getCode()),
+					new Document().append(codeKey, updatedCondition.getCode()).append(nameKey, updatedCondition.getName())
+							.append(dosageListKey, dosages));
 		} else {
 			throw new IOException("Database contains no Condition entry with given ID.");
 		}
