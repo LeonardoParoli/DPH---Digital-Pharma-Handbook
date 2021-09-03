@@ -1,5 +1,6 @@
 package com.dph.dal;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.dph.informationModel.Condition;
@@ -77,5 +78,11 @@ public class SQLDBProxy implements DBProxy {
 	public boolean hasConditionById(String string) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void updateDatabase(List<Condition> model) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

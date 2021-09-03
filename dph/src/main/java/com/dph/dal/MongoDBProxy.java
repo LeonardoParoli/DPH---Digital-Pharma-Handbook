@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -171,5 +172,48 @@ public class MongoDBProxy implements DBProxy {
 		}
 
 	}
+
+	@Override
+	public void updateDatabase(List<Condition> model) throws IOException {
+		List<Drug> drugList = new ArrayList<>();
+		for(Condition condition : model) {
+			for(Entry<String,Dosage> entry : condition.getDosageList().entrySet()) {
+				Drug drug = entry.getValue().getDrug();
+				boolean alreadyInserted=false;
+				for(Drug d : drugList) {
+					if(d.getCode().equals(drug.getCode())) {
+						if(!d.getName().equals(drug.getName()) ||
+								!d.getDescription().equals(drug.getDescription())) {
+							throw new IOException("Given Model is inconsistent. Cannot update the database.");
+						}
+						alreadyInserted = true;
+					}
+				}
+				if(!alreadyInserted) {
+					drugList.add(drug);
+				}
+			}
+		}
+		for(Drug drug : drugList) {
+			if(this.hasDrugById(drug.getCode())) {
+				if(!this.findDrugById(drug.getCode()).equals(drug)){
+					this.updateDrug(drug);
+				}
+			}else {
+				this.save(drug);
+			}
+		}
+		for(Condition condition : model) {
+			if(this.hasConditionById(condition.getCode())) {
+				if(!this.findConditionById(condition.getCode()).equals(condition)) {
+					this.updateCondition(condition);
+				}
+			}else {
+				this.save(condition);
+			}
+		}
+	}
+
+
 
 }
