@@ -9,6 +9,7 @@ import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.assertj.swing.timing.Pause;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,9 +34,10 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() throws Exception {
 		DrugRemover dialog = GuiActionRunner.execute(() -> new DrugRemover("testCode", "testName", 1.0));
 		window = new DialogFixture(robot(),dialog);
-		robot().settings().eventPostingDelay(500);
-		robot().settings().delayBetweenEvents(125);
+		robot().settings().eventPostingDelay(1000);
+		robot().settings().delayBetweenEvents(200);
 		window.show();
+		Pause.pause(1000);
 		drugNameLabel = window.label(DRUG_NAME_LABEL);
 		drugCodeLabel = window.label(DRUG_CODE_LABEL);
 		drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);

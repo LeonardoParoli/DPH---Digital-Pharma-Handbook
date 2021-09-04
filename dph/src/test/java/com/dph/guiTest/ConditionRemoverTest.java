@@ -8,6 +8,7 @@ import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.assertj.swing.timing.Pause;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,9 +31,10 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() throws Exception {
 		ConditionRemover dialog = GuiActionRunner.execute(() -> new ConditionRemover("testCode","testName"));
 		window = new DialogFixture(robot(),dialog);
-		robot().settings().eventPostingDelay(500);
-		robot().settings().delayBetweenEvents(125);
+		robot().settings().eventPostingDelay(1000);
+		robot().settings().delayBetweenEvents(200);
 		window.show();
+		Pause.pause(1000);
 		conditionCodeLabel = window.label(CONDITION_CODE);
 		conditionNameLabel = window.label(CONDITION_NAME);
 		okButton = window.button(OK_BUTTON);

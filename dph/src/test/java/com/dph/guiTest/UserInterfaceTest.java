@@ -14,6 +14,8 @@ import org.assertj.swing.fixture.JTableFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.assertj.swing.timing.Pause;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -73,9 +75,10 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() {
 		UserInterfaceWindow frame = GuiActionRunner.execute(() -> new UserInterfaceWindow());
 		window = new FrameFixture(robot(), frame);
-		robot().settings().eventPostingDelay(500);
-		robot().settings().delayBetweenEvents(125);
+		robot().settings().eventPostingDelay(1000);
+		robot().settings().delayBetweenEvents(200);
 		window.show();
+		Pause.pause(1000);
 		this.mainContent = window.panel(MAIN_CONTENT);
 		this.conditionSelectionBox = mainContent.panel(CONDITION_SELECTION_BOX);
 		this.drugTableBox = mainContent.panel(DRUG_TABLE_BOX);

@@ -23,13 +23,11 @@ jobs:
       name: Build with Java ${{matrix.java}} on ${{matrix.os}}
       steps:
          - uses: actions/checkout@v2
-         - name: default screen resolution
-           run: system_profiler SPDisplaysDataType | grep Resolution
-         - name: change screen resolution
+         - name: Screen resolution setup
            run: |
-             "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1600 900
-         - name: new screen resolution
-           run: system_profiler SPDisplaysDataType | grep Resolution
+              system_profiler SPDisplaysDataType | grep Resolution
+              "/Library/Application Support/VMware Tools/vmware-resolutionSet" 2560 1440
+              system_profiler SPDisplaysDataType | grep Resolutionn
          - name: Set up JDK ${{ matrix.java }}
            uses: actions/setup-java@v1
            with:
