@@ -35,7 +35,7 @@ jobs:
                 ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{hashFiles('**/pom.xml','**/*.yml')}}
              restore-keys: ${{ runner.os }}-m2-
          - name: Build with Maven
-           run: xvfb-run mvn verify ${{ matrix.additional-maven-args }}
+           run: xvfb-run --auto-servernum --server-args "-screen 0 1600x900x24" mvn verify ${{ matrix.additional-maven-args }}
            working-directory: ${{ env.workdir }}
            env: 
               COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
