@@ -30,7 +30,7 @@ public class ConditionRemover extends JDialog {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
 		setResizable(false);
-		setBounds(100, 100, 330, 206);
+		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330,206));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

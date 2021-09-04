@@ -46,7 +46,7 @@ public class ConditionAdder extends JDialog {
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setAlwaysOnTop(true);
-		setBounds(100, 100, 330, 206);
+		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330, 206));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

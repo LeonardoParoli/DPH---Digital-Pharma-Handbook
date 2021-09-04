@@ -67,7 +67,7 @@ public class DrugAdder extends JDialog {
 		setResizable(false);
 		setAlwaysOnTop(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 337, 448);
+		setBounds(10, 10, 337, 448);
 		setMinimumSize(new Dimension(337, 448));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
