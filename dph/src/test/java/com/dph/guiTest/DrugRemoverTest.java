@@ -33,6 +33,8 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() throws Exception {
 		DrugRemover dialog = GuiActionRunner.execute(() -> new DrugRemover("testCode", "testName", 1.0));
 		window = new DialogFixture(robot(),dialog);
+		robot().settings().eventPostingDelay(500);
+		robot().settings().delayBetweenEvents(125);
 		window.show();
 		drugNameLabel = window.label(DRUG_NAME_LABEL);
 		drugCodeLabel = window.label(DRUG_CODE_LABEL);
