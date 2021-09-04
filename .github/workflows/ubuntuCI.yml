@@ -1,4 +1,4 @@
-name: Java CI with Maven on Windows MacOS
+name: Java CI with Maven on Ubuntu
 
 on: 
    push:
@@ -17,7 +17,7 @@ jobs:
               -DrepoToken=$COVERALLS_TOKEN
       strategy:
          matrix:
-            os: [ubuntu-latest, macos-latest, windows-latest]
+            os: [ubuntu-latest]
             java: [11]
             
       name: Build with Java ${{matrix.java}} on ${{matrix.os}}
@@ -35,7 +35,7 @@ jobs:
                 ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{hashFiles('**/pom.xml','**/*.yml')}}
              restore-keys: ${{ runner.os }}-m2-
          - name: Build with Maven
-           run: mvn verify ${{ matrix.additional-maven-args }}
+           run: xvfb-run mvn verify ${{ matrix.additional-maven-args }}
            working-directory: ${{ env.workdir }}
            env: 
               COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
@@ -50,4 +50,3 @@ jobs:
            with:
               name: surefire-report-jdk-${{ matrix.java }}
               path: '**/target/site'
-
