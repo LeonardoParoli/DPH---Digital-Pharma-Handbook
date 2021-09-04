@@ -50,4 +50,10 @@ jobs:
            with:
               name: surefire-report-jdk-${{ matrix.java }}
               path: '**/target/site'
+         - name: Archive Test Failure Screenshots
+           uses: action/upload-artifact@v2
+           if: ${{ always() }}
+           with:
+              name: screenshots-report
+              path: '**/failed-gui-tests'
 
