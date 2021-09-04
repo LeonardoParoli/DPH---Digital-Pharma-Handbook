@@ -25,8 +25,7 @@ jobs:
          - uses: actions/checkout@v2
          - name: Screen resolution setup
            run: |
-              system_profiler SPDisplaysDataType | grep Resolution
-              "/Library/Application Support/VMware Tools/vmware-resolutionSet" 2560 1440
+              "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1600 900
               system_profiler SPDisplaysDataType | grep Resolutionn
          - name: Set up JDK ${{ matrix.java }}
            uses: actions/setup-java@v1

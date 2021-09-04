@@ -32,9 +32,9 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 		ConditionRemover dialog = GuiActionRunner.execute(() -> new ConditionRemover("testCode","testName"));
 		window = new DialogFixture(robot(),dialog);
 		robot().settings().eventPostingDelay(1000);
-		robot().settings().delayBetweenEvents(200);
+		robot().settings().delayBetweenEvents(60);
 		window.show();
-		Pause.pause(1000);
+		Pause.pause(5000);
 		conditionCodeLabel = window.label(CONDITION_CODE);
 		conditionNameLabel = window.label(CONDITION_NAME);
 		okButton = window.button(OK_BUTTON);

@@ -35,9 +35,9 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		DrugRemover dialog = GuiActionRunner.execute(() -> new DrugRemover("testCode", "testName", 1.0));
 		window = new DialogFixture(robot(),dialog);
 		robot().settings().eventPostingDelay(1000);
-		robot().settings().delayBetweenEvents(200);
+		robot().settings().delayBetweenEvents(60);
 		window.show();
-		Pause.pause(1000);
+		Pause.pause(5000);
 		drugNameLabel = window.label(DRUG_NAME_LABEL);
 		drugCodeLabel = window.label(DRUG_CODE_LABEL);
 		drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);

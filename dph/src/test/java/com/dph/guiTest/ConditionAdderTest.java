@@ -44,9 +44,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		ConditionAdder dialog = GuiActionRunner.execute(() -> new ConditionAdder(model));
 		window = new DialogFixture(robot(),dialog);
 		robot().settings().eventPostingDelay(1000);
-		robot().settings().delayBetweenEvents(200);
+		robot().settings().delayBetweenEvents(60);
 		window.show();
-		Pause.pause(1000);
+		Pause.pause(5000);
 		labelName = window.label("labelName");
 		labelCode = window.label("labelCode");
 		comment = window.label("comment");
