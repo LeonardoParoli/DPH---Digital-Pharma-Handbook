@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.fixture.DialogFixture;
@@ -72,7 +73,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		model=null;
 	}
 	
-	@Test
+	@Test @GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
 		labelCode.requireVisible().requireText("Condition Code:");
@@ -86,7 +87,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		conditionCodeText.requireVisible().requireText("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void succesfullCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -105,7 +106,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByDuplicateCodeCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -125,7 +126,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongEmptyCodeloseDialogOnClickOnOkButtonTest() {
 		String testCode = "";
 		String testName = "testName";
@@ -144,7 +145,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongBlankCodeloseDialogOnClickOnOkButtonTest() {
 		String testCode = "   ";
 		String testName = "testName";
@@ -163,7 +164,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongEmptyNameloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "";
@@ -182,7 +183,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongBlankNameloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "   ";
@@ -201,7 +202,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -215,7 +216,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		
 	}
 	
-	@Test
+	@Test @GUITest
 	public void getNewEntryInfosTest() {
 		String testCode = "testCode";
 		String testName = "testName";

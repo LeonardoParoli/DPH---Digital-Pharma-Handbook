@@ -2,6 +2,7 @@ package com.dph.guiTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.fixture.DialogFixture;
@@ -54,7 +55,7 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		this.cancelButton=null;
 	}
 	
-	@Test
+	@Test @GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
 		drugCodeLabel.requireVisible().requireText("Drug Code: " + "testCode");	
@@ -64,7 +65,7 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		cancelButton.requireVisible().requireEnabled().requireText("Cancel");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void closeDialogOnClickOnOkButtonTest() {
 		okButton.click();
 		window.requireNotVisible();
@@ -77,7 +78,7 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();

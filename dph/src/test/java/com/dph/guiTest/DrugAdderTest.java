@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
+
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.fixture.DialogFixture;
@@ -111,7 +113,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		findButton = null;
 	}
 
-	@Test
+	@Test @GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
 		drugCodeText.requireVisible().requireText("").requireEditable().requireEnabled();
@@ -132,7 +134,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		findButton.requireVisible().requireText("Find");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void successfulFindButtonClickWithNewCodeTest() {
 		String testCode = "testCode";
 		drugCodeText.enterText(testCode);
@@ -145,7 +147,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		okButton.requireVisible().requireEnabled();
 	}
 	
-	@Test
+	@Test @GUITest
 	public void successfulFindButtonClickWithStoredCodeTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -161,7 +163,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		okButton.requireVisible().requireEnabled();
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failFindButtonClickByInvalidEmptyCodeTest() {
 		String testCode = "";
 		drugCodeText.enterText(testCode);
@@ -173,7 +175,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		okButton.requireVisible().requireDisabled();
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failFindButtonClickByInvalidBlankCodeTest() {
 		String testCode = "   ";
 		drugCodeText.enterText(testCode);
@@ -185,7 +187,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		okButton.requireVisible().requireDisabled();
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failFindButtonClickByInvalidDuplicatedCodeWithinConditionModelTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -201,7 +203,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	
-	@Test
+	@Test @GUITest
 	public void successfulOperationAddNewDrugCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -232,7 +234,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void successfulOperationWithCopiedDrugCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -259,7 +261,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
 
-	@Test
+	@Test @GUITest
 	public void failByWrongEmptyNameCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "";
@@ -287,7 +289,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test
+	@Test @GUITest
 	public void failByWrongBlankNameCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "    ";
@@ -314,7 +316,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test
+	@Test @GUITest
 	public void failByWrongZeroDosageCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -341,7 +343,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test
+	@Test @GUITest
 	public void failByWrongNegativeDosageCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -368,7 +370,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongEmptyDescriptionCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -395,7 +397,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 	
-	@Test
+	@Test @GUITest
 	public void failByWrongBlankDescriptionCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -422,7 +424,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test
+	@Test @GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -436,7 +438,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 
 	}
 
-	@Test
+	@Test @GUITest
 	public void getAllEntryInfoTest() {
 		String testCode = "testCode";
 		String testName = "testName";
