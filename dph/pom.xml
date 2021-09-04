@@ -11,7 +11,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.13.1</junit.version>
-		<assertJ.version>3.20.2</assertJ.version>
+		<assertJ.version>3.17.2</assertJ.version>
 		<assertJSWING.version>3.17.1</assertJSWING.version>
 		<mockito.version>3.2.4</mockito.version>
 		<jacoco.version>0.8.5</jacoco.version>
