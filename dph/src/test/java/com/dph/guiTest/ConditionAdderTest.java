@@ -46,7 +46,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(1000);
 		robot().settings().delayBetweenEvents(60);
 		window.show();
-		Pause.pause(5000);
+		Pause.pause(10000);
 		labelName = window.label("labelName");
 		labelCode = window.label("labelCode");
 		comment = window.label("comment");
@@ -60,6 +60,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 	
 	@Override
 	protected void onTearDown() {
+		window=null;
 		labelName=null;
 		labelCode=null;
 		comment=null;

@@ -71,7 +71,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(1000);
 		robot().settings().delayBetweenEvents(60);
 		window.show();
-		Pause.pause(5000);
+		Pause.pause(10000);
 		drugCodeText = window.textBox(DRUG_CODE_TEXT);
 		drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
 		drugNameText = window.textBox(DRUG_NAME_TEXT);

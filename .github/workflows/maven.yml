@@ -34,11 +34,6 @@ jobs:
              key: >
                 ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{hashFiles('**/pom.xml','**/*.yml')}}
              restore-keys: ${{ runner.os }}-m2-
-         - name: Screen resolution setup
-           run: |
-               system_profiler SPDisplaysDataType | grep Resolution
-               "/Library/Application Support/VMware Tools/vmware-resolutionSet" 2560 1440
-               system_profiler SPDisplaysDataType | grep Resolution
          - name: Build with Maven
            run: mvn verify ${{ matrix.additional-maven-args }}
            working-directory: ${{ env.workdir }}
