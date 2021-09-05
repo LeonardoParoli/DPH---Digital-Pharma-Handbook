@@ -70,10 +70,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		condition = new Condition("conditionCode", "conditionName", new ArrayList<Dosage>());
 		DrugAdder dialog = GuiActionRunner.execute(() -> new DrugAdder(model, condition));
 		window = new DialogFixture(robot(), dialog);
-		robot().settings().eventPostingDelay(1000);
+		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
-		window.show();
-		Pause.pause(10000);
+		robot().showWindow(dialog);
 		drugCodeText = window.textBox(DRUG_CODE_TEXT);
 		drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
 		drugNameText = window.textBox(DRUG_NAME_TEXT);

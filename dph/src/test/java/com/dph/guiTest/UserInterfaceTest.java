@@ -76,10 +76,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() {
 		UserInterfaceWindow frame = GuiActionRunner.execute(() -> new UserInterfaceWindow());
 		window = new FrameFixture(robot(), frame);
-		robot().settings().eventPostingDelay(1000);
+		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
-		window.show();
-		Pause.pause(5000);
+		robot().showWindow(frame);
 		this.mainContent = window.panel(MAIN_CONTENT);
 		this.conditionSelectionBox = mainContent.panel(CONDITION_SELECTION_BOX);
 		this.drugTableBox = mainContent.panel(DRUG_TABLE_BOX);

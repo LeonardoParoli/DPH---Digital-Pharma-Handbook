@@ -94,8 +94,8 @@ public class UserInterfaceWindow extends JFrame {
 		setTitle("Digital Pharma Handbook");
 		setForeground(new Color(0, 0, 0));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(10, 10, 471, 662);
-		setMinimumSize(new Dimension(470, 660));
+		setBounds(10, 10, 471, 600);
+		setMinimumSize(new Dimension(500, 600));
 		mainContent = new JPanel();
 		mainContent.setBackground(UIManager.getColor("Button.light"));
 		mainContent.setName("mainContent");
@@ -106,7 +106,7 @@ public class UserInterfaceWindow extends JFrame {
 		conditionSelectionBox = new JPanel();
 		conditionSelectionBox.setBackground(UIManager.getColor("Button.highlight"));
 		conditionSelectionBox.setName("conditionSelectionBox");
-		conditionSelectionBox.setBounds(10, 11, 435, 78);
+		conditionSelectionBox.setBounds(10, 0, 464, 44);
 		mainContent.add(conditionSelectionBox);
 		conditionSelectionBox.setLayout(null);
 
@@ -196,12 +196,16 @@ public class UserInterfaceWindow extends JFrame {
 		removeConditionButton.setBounds(336, 11, 89, 23);
 		conditionSelectionBox.add(removeConditionButton);
 		
+				Component horizontalStrut = Box.createHorizontalStrut(20);
+				horizontalStrut.setBounds(0, 45, 435, 12);
+				conditionSelectionBox.add(horizontalStrut);
+		
 		
 		drugTableBox = new JPanel();
 		drugTableBox.setBackground(UIManager.getColor("Button.highlight"));
 		drugTableBox.setName("drugTableBox");
 		drugTableBox.setToolTipText("");
-		drugTableBox.setBounds(10, 98, 435, 253);
+		drugTableBox.setBounds(10, 55, 464, 253);
 		mainContent.add(drugTableBox);
 		
 		drugTable = new JTable();
@@ -302,7 +306,7 @@ public class UserInterfaceWindow extends JFrame {
 		drugDescriptionBox = new JPanel();
 		drugDescriptionBox.setBackground(UIManager.getColor("Button.highlight"));
 		drugDescriptionBox.setName("drugDescriptionBox");
-		drugDescriptionBox.setBounds(10, 362, 435, 260);
+		drugDescriptionBox.setBounds(10, 321, 464, 240);
 		mainContent.add(drugDescriptionBox);
 
 		drugDescription = new JTextArea();
@@ -415,40 +419,36 @@ public class UserInterfaceWindow extends JFrame {
 			gl_drugDescriptionBox.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_drugDescriptionBox.createSequentialGroup()
 					.addGroup(gl_drugDescriptionBox.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_drugDescriptionBox.createSequentialGroup()
-							.addGap(10)
-							.addComponent(drugDescription, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_drugDescriptionBox.createSequentialGroup()
-							.addGap(336)
-							.addComponent(modifyDescriptionButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
 						.addGroup(Alignment.TRAILING, gl_drugDescriptionBox.createSequentialGroup()
-							.addContainerGap()
+							.addGap(25)
+							.addComponent(drugDescription, GroupLayout.PREFERRED_SIZE, 415, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_drugDescriptionBox.createSequentialGroup()
+							.addGap(19)
 							.addComponent(statusLabel, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(connectButton, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_drugDescriptionBox.createParallelGroup(Alignment.TRAILING)
+								.addComponent(connectButton, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
+								.addComponent(modifyDescriptionButton, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))))
+					.addGap(24))
 		);
 		gl_drugDescriptionBox.setVerticalGroup(
 			gl_drugDescriptionBox.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_drugDescriptionBox.createSequentialGroup()
-					.addGap(11)
-					.addComponent(drugDescription, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
-					.addGap(8)
-					.addComponent(modifyDescriptionButton)
-					.addGap(18)
-					.addGroup(gl_drugDescriptionBox.createParallelGroup(Alignment.BASELINE)
-						.addComponent(connectButton)
-						.addComponent(statusLabel, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
-					.addGap(52))
+					.addContainerGap()
+					.addGroup(gl_drugDescriptionBox.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_drugDescriptionBox.createSequentialGroup()
+							.addComponent(drugDescription, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(modifyDescriptionButton)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(connectButton))
+						.addComponent(statusLabel, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
 		drugDescriptionBox.setLayout(gl_drugDescriptionBox);
 
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setBounds(10, 87, 435, 12);
-		mainContent.add(horizontalStrut);
-
 		Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-		horizontalStrut_1.setBounds(10, 352, 435, 12);
+		horizontalStrut_1.setBounds(10, 307, 464, 12);
 		mainContent.add(horizontalStrut_1);
 	}
 
