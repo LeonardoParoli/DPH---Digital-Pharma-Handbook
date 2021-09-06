@@ -65,6 +65,8 @@ public class DrugAdder extends JDialog {
 	 * Create the dialog.
 	 */
 	public DrugAdder(List<Drug> currentModel, Condition condition) {
+		setPreferredSize(new Dimension(337, 448));
+		setSize(new Dimension(337, 448));
 		this.model = currentModel;
 		this.selectedCondition= condition;
 		setFont(new Font("Dialog", Font.PLAIN, 12));

@@ -28,6 +28,8 @@ public class ConditionRemover extends JDialog {
 	 * Create the dialog.
 	 */
 	public ConditionRemover(String conditionCode, String conditionName) {
+		setPreferredSize(new Dimension(330, 206));
+		setSize(new Dimension(330, 206));
 		setFont(new Font("Dialog", Font.PLAIN, 12));
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setResizable(false);

@@ -43,6 +43,8 @@ public class ConditionAdder extends JDialog {
 	 * Create the dialog.
 	 */
 	public ConditionAdder(DefaultComboBoxModel<Condition> conditionModel) {
+		setPreferredSize(new Dimension(330, 206));
+		setSize(new Dimension(330, 206));
 		this.model = conditionModel;
 		setFont(new Font("Dialog", Font.PLAIN, 12));
 		setResizable(false);

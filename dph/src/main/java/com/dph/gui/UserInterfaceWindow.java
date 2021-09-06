@@ -90,6 +90,7 @@ public class UserInterfaceWindow extends JFrame {
 	 * @param proxy
 	 */
 	public UserInterfaceWindow() {
+		setSize(new Dimension(500, 600));
 		setResizable(false);
 		setTitle("Digital Pharma Handbook");
 		setForeground(new Color(0, 0, 0));
