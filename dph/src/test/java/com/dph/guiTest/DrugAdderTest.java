@@ -10,6 +10,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.edt.GuiTask;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
@@ -72,29 +73,35 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		window.focus();
-		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 
 	private boolean setupVariables() {
-		drugCodeText = window.textBox(DRUG_CODE_TEXT);
-		drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
-		drugNameText = window.textBox(DRUG_NAME_TEXT);
-		drugCodeLabel = window.label(DRUG_CODE_LABEL);
-		drugNameLabel = window.label(DRUG_NAME_LABEL);
-		drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
-		comment = window.textBox(COMMENT);
-		codeChecker = window.label(CODE_CHECKER);
-		dosageChecker = window.label(DOSAGE_CHECKER);
-		nameChecker = window.label(NAME_CHECKER);
-		okButton = window.button(OK_BUTTON);
-		cancelButton = window.button(CANCEL_BUTTON);
-		drugDescLabel = window.label(DRUG_DESC_LABEL);
-		drugDescText = window.textBox(DRUG_DESC_TEXT);
-		descChecker = window.label(DESC_CHECKER);
-		findButton = window.button(FIND_BUTTON);
-		return true;
+		boolean condition = false;
+		while (!condition) {
+			try {
+				this.drugCodeText = window.textBox(DRUG_CODE_TEXT);
+				this.drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
+				this.drugNameText = window.textBox(DRUG_NAME_TEXT);
+				this.drugCodeLabel = window.label(DRUG_CODE_LABEL);
+				this.drugNameLabel = window.label(DRUG_NAME_LABEL);
+				this.drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
+				this.comment = window.textBox(COMMENT);
+				this.codeChecker = window.label(CODE_CHECKER);
+				this.dosageChecker = window.label(DOSAGE_CHECKER);
+				this.nameChecker = window.label(NAME_CHECKER);
+				this.okButton = window.button(OK_BUTTON);
+				this.cancelButton = window.button(CANCEL_BUTTON);
+				this.drugDescLabel = window.label(DRUG_DESC_LABEL);
+				this.drugDescText = window.textBox(DRUG_DESC_TEXT);
+				this.descChecker = window.label(DESC_CHECKER);
+				this.findButton = window.button(FIND_BUTTON);
+				condition = true;
+			} catch (ComponentLookupException e) {
+				condition = false;
+			}
+		}
+		return condition;
 	}
 
 	@Override
@@ -124,7 +131,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		findButton = null;
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
 		drugCodeText.requireVisible().requireText("").requireEditable().requireEnabled();
@@ -133,7 +141,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		drugCodeLabel.requireVisible().requireText("Drug Code:").requireEnabled();
 		drugNameLabel.requireVisible().requireText("Drug Name:").requireEnabled();
 		drugDosageLabel.requireVisible().requireText("Drug Dosage:").requireEnabled();
-		comment.requireVisible().requireText("Insert the code of the drug you wish to associate with the selected condition. If the code isn't in the database, you'll have to give the necessary data of the drug you wish to add.");
+		comment.requireVisible().requireText(
+				"Insert the code of the drug you wish to associate with the selected condition. If the code isn't in the database, you'll have to give the necessary data of the drug you wish to add.");
 		codeChecker.requireVisible().requireText("---");
 		nameChecker.requireVisible().requireText("---");
 		dosageChecker.requireVisible().requireText("---");
@@ -144,8 +153,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		descChecker.requireVisible().requireText("---");
 		findButton.requireVisible().requireText("Find");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void successfulFindButtonClickWithNewCodeTest() {
 		String testCode = "testCode";
 		drugCodeText.enterText(testCode);
@@ -157,13 +167,14 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		codeChecker.requireText("NEW");
 		okButton.requireVisible().requireEnabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void successfulFindButtonClickWithStoredCodeTest() {
 		String testCode = "testCode";
 		String testName = "testName";
 		String testDesc = "testDesc";
-		model.add(new Drug(testCode,testName,testDesc));
+		model.add(new Drug(testCode, testName, testDesc));
 		drugCodeText.enterText(testCode);
 		findButton.click();
 		drugCodeText.requireVisible().requireDisabled();
@@ -173,8 +184,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		codeChecker.requireText("OKAY");
 		okButton.requireVisible().requireEnabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failFindButtonClickByInvalidEmptyCodeTest() {
 		String testCode = "";
 		drugCodeText.enterText(testCode);
@@ -185,8 +197,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		codeChecker.requireText("ERR");
 		okButton.requireVisible().requireDisabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failFindButtonClickByInvalidBlankCodeTest() {
 		String testCode = "   ";
 		drugCodeText.enterText(testCode);
@@ -197,13 +210,14 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		codeChecker.requireText("ERR");
 		okButton.requireVisible().requireDisabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failFindButtonClickByInvalidDuplicatedCodeWithinConditionModelTest() {
 		String testCode = "testCode";
 		String testName = "testName";
 		String testDesc = "testDesc";
-		condition.addDrug(new Drug(testCode,testName,testDesc), 2.0);
+		condition.addDrug(new Drug(testCode, testName, testDesc), 2.0);
 		drugCodeText.enterText(testCode);
 		findButton.click();
 		drugCodeText.requireVisible().requireEnabled();
@@ -212,9 +226,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		codeChecker.requireText("ERR");
 		okButton.requireVisible().requireDisabled();
 	}
-	
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void successfulOperationAddNewDrugCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -244,14 +258,15 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void successfulOperationWithCopiedDrugCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
 		String testDosage = "2.0";
 		String testDesc = "testDesc";
-		model.add(new Drug(testCode,testName,testDesc));
+		model.add(new Drug(testCode, testName, testDesc));
 		drugCodeText.enterText(testCode);
 		findButton.click();
 		findButton.requireDisabled();
@@ -272,7 +287,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void failByWrongEmptyNameCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "";
@@ -300,7 +316,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void failByWrongBlankNameCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "    ";
@@ -327,7 +344,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void failByWrongZeroDosageCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -354,7 +372,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void failByWrongNegativeDosageCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -380,8 +399,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongEmptyDescriptionCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -407,8 +427,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongBlankDescriptionCloseDialogOnClickOnOKButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -435,7 +456,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -449,7 +471,8 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void getAllEntryInfoTest() {
 		String testCode = "testCode";
 		String testName = "testName";

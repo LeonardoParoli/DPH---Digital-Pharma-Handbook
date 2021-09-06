@@ -4,6 +4,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.edt.GuiTask;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
@@ -79,28 +80,33 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(frame);
-		window.focus();
-		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
-		
 	}
 
 	private boolean setupVariables() {
-		this.mainContent = window.panel(MAIN_CONTENT);
-		this.conditionSelectionBox = mainContent.panel(CONDITION_SELECTION_BOX);
-		this.drugTableBox = mainContent.panel(DRUG_TABLE_BOX);
-		this.drugDescBox = mainContent.panel(DRUG_DESCRIPTION_BOX);
-		this.conditionSelection = conditionSelectionBox.comboBox(CONDITION_SELECTION);
-		this.drugTable = drugTableBox.table(DRUG_TABLE);
-		this.drugDesc = drugDescBox.textBox(DRUG_DESCRIPTION);
-		this.statusLabel = drugDescBox.label(STATUS_LABEL);
-		this.addConditionButton = conditionSelectionBox.button(ADD_CONDITION_BUTTON);
-		this.removeConditionButton = conditionSelectionBox.button(REMOVE_CONDITION_BUTTON);
-		this.addDrugButton = drugTableBox.button(ADD_DRUG_BUTTON);
-		this.removeDrugButton = drugTableBox.button(REMOVE_DRUG_BUTTON);
-		this.modifyDrugDescButton = drugDescBox.button(MODIFY_DESCRIPTION_BUTTON);
-		this.connectButton = drugDescBox.button(CONNECT_BUTTON);
-		return true;
+		boolean condition = false;
+		while (!condition) {
+			try {
+			this.mainContent = window.panel(MAIN_CONTENT);
+			this.conditionSelectionBox = mainContent.panel(CONDITION_SELECTION_BOX);
+			this.drugTableBox = mainContent.panel(DRUG_TABLE_BOX);
+			this.drugDescBox = mainContent.panel(DRUG_DESCRIPTION_BOX);
+			this.conditionSelection = conditionSelectionBox.comboBox(CONDITION_SELECTION);
+			this.drugTable = drugTableBox.table(DRUG_TABLE);
+			this.drugDesc = drugDescBox.textBox(DRUG_DESCRIPTION);
+			this.statusLabel = drugDescBox.label(STATUS_LABEL);
+			this.addConditionButton = conditionSelectionBox.button(ADD_CONDITION_BUTTON);
+			this.removeConditionButton = conditionSelectionBox.button(REMOVE_CONDITION_BUTTON);
+			this.addDrugButton = drugTableBox.button(ADD_DRUG_BUTTON);
+			this.removeDrugButton = drugTableBox.button(REMOVE_DRUG_BUTTON);
+			this.modifyDrugDescButton = drugDescBox.button(MODIFY_DESCRIPTION_BUTTON);
+			this.connectButton = drugDescBox.button(CONNECT_BUTTON);
+			condition=true;
+			}catch(ComponentLookupException e) {
+				condition =false;
+			}
+		}
+		return condition;
 	}
 
 	@Override
@@ -127,7 +133,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		this.connectButton = null;
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void isEverythingDisplayedCorrectlyOnStartupTest() {
 		window.requireTitle("Digital Pharma Handbook");
 		mainContent.requireVisible();
@@ -146,7 +153,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		connectButton.requireVisible().requireEnabled().requireText("Connect");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void isAbleToConnectTest() {
 		boolean isAble = GuiActionRunner.execute(new GuiQuery<Boolean>() {
 			@Override
@@ -170,7 +178,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		assertThat(isAble).isInstanceOf(Boolean.class).isTrue();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void connectionToDALTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -193,11 +202,13 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		modifyDrugDescButton.requireVisible().requireDisabled();
 		drugTable.requireVisible().requireDisabled().requireColumnCount(3).requireRowCount(0);
 		conditionSelection.requireVisible().requireEnabled().requireNotEditable().requireItemCount(2);
-		assertThat(conditionSelection.contents()).containsExactly("testCode/testCondition", "2ndtestCode/2ndtestCondition");
+		assertThat(conditionSelection.contents()).containsExactly("testCode/testCondition",
+				"2ndtestCode/2ndtestCondition");
 		conditionSelection.requireNoSelection();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void disconnectFromDALTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -218,7 +229,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		conditionSelection.requireVisible().requireNotEditable().requireDisabled();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void connectionToDALFailTest() {
 		statusLabel.requireVisible().requireEnabled().requireText("Awaiting connection.");
 		connectButton.requireText("Connect");
@@ -226,7 +238,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		statusLabel.requireVisible().requireEnabled().requireText("ERROR.");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void removeConditionButtonShouldBeEnabledWhenSelectingConditionInComboBoxTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -243,7 +256,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		removeConditionButton.requireEnabled();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void drugTableShouldBeEnabledWhenConditionIsSelectedInComboBoxTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -257,8 +271,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugTable.requireEnabled().requireColumnCount(3).requireColumnNamed("Drug Code").requireColumnNamed("Drug Name")
 				.requireColumnNamed("Drug Dosage").requireRowCount(2);
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void drugTableShouldBeEmptyIfSelectedConditionHasNoDrugTest() throws IOException {
 		DBProxy proxy = Mockito.mock(DBProxy.class);
 		List<Dosage> dosages = new ArrayList<>();
@@ -274,11 +289,12 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		});
 		connectButton.click();
 		conditionSelection.selectItem(0);
-		drugTable.requireEnabled().requireVisible().requireColumnCount(3).requireColumnNamed("Drug Code").requireColumnNamed("Drug Name")
-				.requireColumnNamed("Drug Dosage").requireRowCount(0);
+		drugTable.requireEnabled().requireVisible().requireColumnCount(3).requireColumnNamed("Drug Code")
+				.requireColumnNamed("Drug Name").requireColumnNamed("Drug Dosage").requireRowCount(0);
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void showAddDrugButtonWhenConditionIsSelectedInComboBoxTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -295,7 +311,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		addDrugButton.requireEnabled();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void drugDescriptionShouldBeEnabledWhenSelectingDrugEntryFromDrugTable() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -309,8 +326,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugTable.selectRows(0);
 		drugDesc.requireEnabled().requireNotEditable();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void removeDrugButtonShouldBeEnabledWhenSelectingDrugEntryFromDrugTableTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -324,8 +342,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugTable.selectRows(0);
 		removeDrugButton.requireVisible().requireEnabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void removeDrugButtonShouldBeDisabledWhenDeselectingDrugTableTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -342,7 +361,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		removeDrugButton.requireVisible().requireDisabled();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void showDescriptionWhenSelectingDrugEntryFromDrugTableTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -362,7 +382,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugDesc.requireText("desc2");
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void enableModifyButtonWhenDrugIsSelectedFromDrugListTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -377,7 +398,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		modifyDrugDescButton.requireEnabled();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void clickEnabledModifyButtonShouldChangeButtonTextTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -392,8 +414,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		modifyDrugDescButton.click();
 		modifyDrugDescButton.requireText("Done");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void clickEnabledModifyButtonShouldDisableEverythingElseTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -406,22 +429,25 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		conditionSelection.selectItem(0);
 		drugTable.selectRows(0);
 		modifyDrugDescButton.click();
-				drugTable.requireDisabled();
+		drugTable.requireDisabled();
 		conditionSelection.requireDisabled();
 		addConditionButton.requireDisabled();
-		removeConditionButton.requireDisabled();;
+		removeConditionButton.requireDisabled();
+		;
 		addDrugButton.requireDisabled();
 		removeDrugButton.requireDisabled();
 		modifyDrugDescButton.click();
 		drugTable.requireEnabled();
 		conditionSelection.requireEnabled();
 		addConditionButton.requireEnabled();
-		removeConditionButton.requireEnabled();;
+		removeConditionButton.requireEnabled();
+		;
 		addDrugButton.requireEnabled();
 		removeDrugButton.requireEnabled();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void modifyDrugDescWhenDrugIsSelectedAndButtonPressedTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -445,8 +471,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugTable.selectRows(0);
 		drugDesc.requireEditable().requireVisible().requireText("desc1 testType");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByBlankDescriptionModifyDrugDescWhenDrugIsSelectedAndButtonPressedTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -465,8 +492,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		drugDesc.requireText("desc1 testType");
 		modifyDrugDescButton.click();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByEmptyDescriptionModifyDrugDescWhenDrugIsSelectedAndButtonPressedTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -486,7 +514,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		modifyDrugDescButton.click();
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void clickingConditionAddButtonOpensNewConditionAdderWindowTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -500,8 +529,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		DialogFixture adder = WindowFinder.findDialog(ConditionAdder.class).withTimeout(5000).using(robot());
 		adder.requireVisible();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void addingConditionThroughDialogTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -522,7 +552,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		conditionSelection.requireSelection("testCode/testCondition").requireItemCount(3);
 	}
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void clickingConditionRemoveButtonOpensNewConditionRemoverWindowTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -538,8 +569,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		DialogFixture remover = WindowFinder.findDialog(ConditionRemover.class).withTimeout(5000).using(robot());
 		remover.requireVisible();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void removingConditionThroughDialogTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -557,9 +589,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		remover.button("OKButton").click();
 		conditionSelection.requireItemCount(1).requireSelection("2ndtestCode/2ndtestCondition");
 	}
-	
 
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void clickingDrugAddButtonopensNewDrugAdderWindowTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -576,8 +608,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		DialogFixture adder = WindowFinder.findDialog(DrugAdder.class).withTimeout(5000).using(robot());
 		adder.requireVisible();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void addingDrugThroughDialogTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -600,8 +633,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		adder.button("OKButton").click();
 		drugTable.requireNoSelection().requireRowCount(3);
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void clickingDrugRemoveButtonOpensNewDrugRemoverWindowTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -619,8 +653,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		DialogFixture remover = WindowFinder.findDialog(DrugRemover.class).withTimeout(5000).using(robot());
 		remover.requireVisible();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void removingDrugThroughDialogTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		GuiActionRunner.execute(new GuiTask() {
@@ -639,8 +674,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		remover.button("OKButton").click();
 		drugTable.requireRowCount(1);
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failDisconnectFromDALOnsavingChangesTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		doThrow(IOException.class).when(proxy).updateDatabase(Mockito.anyList());
@@ -654,8 +690,9 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		connectButton.click();
 		statusLabel.requireVisible().requireText("Error, cannot load database!");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failConnectionToDALWhenRetrievingDrugListTest() throws IOException {
 		DBProxy proxy = this.setupProxyMock();
 		doThrow(IOException.class).when(proxy).findAllConditions();

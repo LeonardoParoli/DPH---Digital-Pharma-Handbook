@@ -8,6 +8,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.edt.GuiTask;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
@@ -21,7 +22,7 @@ import com.dph.gui.ConditionRemover;
 
 @RunWith(GUITestRunner.class)
 public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
-	
+
 	private static final String CONDITION_NAME = "conditionNameLabel";
 	private static final String CONDITION_CODE = "conditionCodeLabel";
 	private static final String CANCEL_BUTTON = "cancelButton";
@@ -31,25 +32,31 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 	private JButtonFixture cancelButton;
 	private JLabelFixture conditionCodeLabel;
 	private JLabelFixture conditionNameLabel;
-	
+
 	@Override
 	protected void onSetUp() throws Exception {
-		ConditionRemover dialog = GuiActionRunner.execute(() -> new ConditionRemover("testCode","testName"));
-		window = new DialogFixture(robot(),dialog);
+		ConditionRemover dialog = GuiActionRunner.execute(() -> new ConditionRemover("testCode", "testName"));
+		window = new DialogFixture(robot(), dialog);
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		window.focus();
-		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
-	
+
 	private boolean setupVariables() {
-		conditionCodeLabel = window.label(CONDITION_CODE);
-		conditionNameLabel = window.label(CONDITION_NAME);
-		okButton = window.button(OK_BUTTON);
-		cancelButton = window.button(CANCEL_BUTTON);
-		return true;
+		boolean condition = false;
+		while (!condition) {
+			try {
+				this.conditionCodeLabel = window.label(CONDITION_CODE);
+				this.conditionNameLabel = window.label(CONDITION_NAME);
+				this.okButton = window.button(OK_BUTTON);
+				this.cancelButton = window.button(CANCEL_BUTTON);
+				condition = true;
+			} catch (ComponentLookupException e) {
+				condition = false;
+			}
+		}
+		return condition;
 	}
 
 	@Override
@@ -60,22 +67,24 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 				window.target().dispose();
 			}
 		});
-		this.okButton=null;
-		this.cancelButton=null;
-		this.conditionCodeLabel=null;
-		this.conditionNameLabel=null;
+		this.okButton = null;
+		this.cancelButton = null;
+		this.conditionCodeLabel = null;
+		this.conditionNameLabel = null;
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
-		conditionCodeLabel.requireVisible().requireText("Condition Code: " + "testCode");	
+		conditionCodeLabel.requireVisible().requireText("Condition Code: " + "testCode");
 		conditionNameLabel.requireVisible().requireText("Condition Name: " + "testName");
 		okButton.requireVisible().requireEnabled().requireText("OK");
 		cancelButton.requireVisible().requireEnabled().requireText("Cancel");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnOkButtonTest() {
 		okButton.click();
 		window.requireNotVisible();
@@ -87,8 +96,9 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -99,8 +109,7 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 			}
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("Cancel");
-		
+
 	}
-	
 
 }

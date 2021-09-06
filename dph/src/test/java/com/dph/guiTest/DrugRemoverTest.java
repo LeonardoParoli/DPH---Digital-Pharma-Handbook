@@ -8,6 +8,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.edt.GuiTask;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
@@ -37,22 +38,28 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() throws Exception {
 		DrugRemover dialog = GuiActionRunner.execute(() -> new DrugRemover("testCode", "testName", 1.0));
-		window = new DialogFixture(robot(),dialog);
+		window = new DialogFixture(robot(), dialog);
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		window.focus();
-		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
-	
+
 	private boolean setupVariables() {
-		drugNameLabel = window.label(DRUG_NAME_LABEL);
-		drugCodeLabel = window.label(DRUG_CODE_LABEL);
-		drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
-		okButton = window.button(OK_BUTTON);
-		cancelButton = window.button(CANCEL_BUTTON);
-		return true;
+		boolean condition = false;
+		while (!condition) {
+			try {
+				this.drugNameLabel = window.label(DRUG_NAME_LABEL);
+				this.drugCodeLabel = window.label(DRUG_CODE_LABEL);
+				this.drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
+				this.okButton = window.button(OK_BUTTON);
+				this.cancelButton = window.button(CANCEL_BUTTON);
+				condition = true;
+			} catch (ComponentLookupException e) {
+				condition = false;
+			}
+		}
+		return condition;
 	}
 
 	@Override
@@ -63,24 +70,26 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 				window.target().dispose();
 			}
 		});
-		this.drugCodeLabel=null;
-		this.drugCodeLabel=null;
-		this.drugDosageLabel=null;
-		this.okButton=null;
-		this.cancelButton=null;
+		this.drugCodeLabel = null;
+		this.drugCodeLabel = null;
+		this.drugDosageLabel = null;
+		this.okButton = null;
+		this.cancelButton = null;
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
-		drugCodeLabel.requireVisible().requireText("Drug Code: " + "testCode");	
+		drugCodeLabel.requireVisible().requireText("Drug Code: " + "testCode");
 		drugNameLabel.requireVisible().requireText("Drug Name: " + "testName");
 		drugDosageLabel.requireVisible().requireText("Drug Dosage: " + 1.0);
 		okButton.requireVisible().requireEnabled().requireText("OK");
 		cancelButton.requireVisible().requireEnabled().requireText("Cancel");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnOkButtonTest() {
 		okButton.click();
 		window.requireNotVisible();
@@ -92,8 +101,9 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -105,6 +115,5 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("Cancel");
 	}
-	
 
 }

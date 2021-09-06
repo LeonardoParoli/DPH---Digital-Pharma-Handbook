@@ -11,6 +11,7 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
 import org.assertj.swing.edt.GuiTask;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
@@ -52,27 +53,32 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() throws Exception {
 		model = new DefaultComboBoxModel<>();
 		ConditionAdder dialog = GuiActionRunner.execute(() -> new ConditionAdder(model));
-		window = new DialogFixture(robot(),dialog);
-
+		window = new DialogFixture(robot(), dialog);
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		window.focus();
-		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
-	
+
 	private boolean setupVariables() {
-		labelName = window.label(LABEL_NAME);
-		labelCode = window.label(LABEL_CODE);
-		comment = window.label(COMMENT);
-		nameChecker = window.label(NAME_CHECKER);
-		codeChecker = window.label(CODE_CHECKER);
-		conditionNameText = window.textBox(CONDITION_NAME_TEXT);
-		conditionCodeText = window.textBox(CONDITION_CODE_TEXT);
-		okButton = window.button(OK_BUTTON);
-		cancelButton = window.button(CANCEL_BUTTON);
-		return true;
+		boolean condition = false;
+		while (!condition) {
+			try {
+				this.labelName = window.label(LABEL_NAME);
+				this.labelCode = window.label(LABEL_CODE);
+				this.comment = window.label(COMMENT);
+				this.nameChecker = window.label(NAME_CHECKER);
+				this.codeChecker = window.label(CODE_CHECKER);
+				this.conditionNameText = window.textBox(CONDITION_NAME_TEXT);
+				this.conditionCodeText = window.textBox(CONDITION_CODE_TEXT);
+				this.okButton = window.button(OK_BUTTON);
+				this.cancelButton = window.button(CANCEL_BUTTON);
+				condition = true;
+			} catch (ComponentLookupException e) {
+				condition = false;
+			}
+		}
+		return condition;
 	}
 
 	@Override
@@ -83,19 +89,20 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 				window.target().dispose();
 			}
 		});
-		window=null;
-		labelName=null;
-		labelCode=null;
-		comment=null;
+		window = null;
+		labelName = null;
+		labelCode = null;
+		comment = null;
 		codeChecker = null;
-		conditionNameText =null;
-		conditionCodeText=null;
-		okButton=null;
-		cancelButton=null;
-		model=null;
+		conditionNameText = null;
+		conditionCodeText = null;
+		okButton = null;
+		cancelButton = null;
+		model = null;
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void everythingDisplayedCorrectlyOnPopUpTest() {
 		window.requireVisible();
 		labelCode.requireVisible().requireText("Condition Code:");
@@ -108,8 +115,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		conditionNameText.requireVisible().requireText("");
 		conditionCodeText.requireVisible().requireText("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void succesfullCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
@@ -127,12 +135,13 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("OK");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByDuplicateCodeCloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "testName";
-		model.addElement(new Condition(testCode,testName, new ArrayList<Dosage>()));
+		model.addElement(new Condition(testCode, testName, new ArrayList<Dosage>()));
 		conditionCodeText.enterText(testCode);
 		conditionNameText.enterText(testName);
 		conditionCodeText.requireText(testCode);
@@ -147,8 +156,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongEmptyCodeloseDialogOnClickOnOkButtonTest() {
 		String testCode = "";
 		String testName = "testName";
@@ -166,8 +176,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongBlankCodeloseDialogOnClickOnOkButtonTest() {
 		String testCode = "   ";
 		String testName = "testName";
@@ -185,8 +196,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongEmptyNameloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "";
@@ -204,8 +216,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void failByWrongBlankNameloseDialogOnClickOnOkButtonTest() {
 		String testCode = "testCode";
 		String testName = "   ";
@@ -223,8 +236,9 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("");
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void closeDialogOnClickOnCancelButtonTest() {
 		cancelButton.click();
 		window.requireNotVisible();
@@ -235,10 +249,11 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 			}
 		});
 		assertThat(lastButtonPressed).isInstanceOf(String.class).isEqualTo("Cancel");
-		
+
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void getNewEntryInfosTest() {
 		String testCode = "testCode";
 		String testName = "testName";
