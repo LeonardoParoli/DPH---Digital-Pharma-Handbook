@@ -80,7 +80,7 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(frame);
-		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
+		Awaitility.given().ignoreExceptions().await().atMost(20, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 
 	private boolean setupVariables() {
