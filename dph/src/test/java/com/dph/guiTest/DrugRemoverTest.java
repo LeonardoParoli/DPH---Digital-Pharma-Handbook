@@ -2,6 +2,8 @@ package com.dph.guiTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.concurrent.TimeUnit;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
@@ -10,7 +12,7 @@ import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
-import org.assertj.swing.timing.Pause;
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,13 +40,18 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
+		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
+	}
+	
+	private boolean setupVariables() {
 		drugNameLabel = window.label(DRUG_NAME_LABEL);
 		drugCodeLabel = window.label(DRUG_CODE_LABEL);
 		drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
 		okButton = window.button(OK_BUTTON);
 		cancelButton = window.button(CANCEL_BUTTON);
+		return true;
 	}
-	
+
 	@Override
 	protected void onTearDown() {
 		this.drugCodeLabel=null;

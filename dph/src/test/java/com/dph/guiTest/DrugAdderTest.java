@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.table.DefaultTableModel;
+import java.util.concurrent.TimeUnit;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -16,7 +15,7 @@ import org.assertj.swing.fixture.JLabelFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
-import org.assertj.swing.timing.Pause;
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.dph.gui.DrugAdder;
@@ -56,7 +55,6 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private JLabelFixture drugDosageLabel;
 	private JLabelFixture dosageChecker;
 	private List<Drug> model;
-	private List<Drug> drugList;
 	private JLabelFixture nameChecker;
 	private JLabelFixture drugDescLabel;
 	private JTextComponentFixture drugDescText;
@@ -73,6 +71,10 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
+		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
+	}
+
+	private boolean setupVariables() {
 		drugCodeText = window.textBox(DRUG_CODE_TEXT);
 		drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
 		drugNameText = window.textBox(DRUG_NAME_TEXT);
@@ -89,6 +91,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		drugDescText = window.textBox(DRUG_DESC_TEXT);
 		descChecker = window.label(DESC_CHECKER);
 		findButton = window.button(FIND_BUTTON);
+		return true;
 	}
 
 	@Override

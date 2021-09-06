@@ -3,6 +3,7 @@ package com.dph.guiTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultComboBoxModel;
 
@@ -15,7 +16,7 @@ import org.assertj.swing.fixture.JLabelFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
-import org.assertj.swing.timing.Pause;
+import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.dph.gui.ConditionAdder;
@@ -25,6 +26,13 @@ import com.dph.informationModel.Dosage;
 @RunWith(GUITestRunner.class)
 public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 
+	private static final String LABEL_NAME = "labelName";
+	private static final String LABEL_CODE = "labelCode";
+	private static final String COMMENT = "comment";
+	private static final String NAME_CHECKER = "nameChecker";
+	private static final String CODE_CHECKER = "codeChecker";
+	private static final String CONDITION_NAME_TEXT = "conditionNameText";
+	private static final String CONDITION_CODE_TEXT = "conditionCodeText";
 	private static final String CANCEL_BUTTON = "cancelButton";
 	private static final String OK_BUTTON = "OKButton";
 	private DialogFixture window;
@@ -47,17 +55,22 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		labelName = window.label("labelName");
-		labelCode = window.label("labelCode");
-		comment = window.label("comment");
-		nameChecker = window.label("nameChecker");
-		codeChecker = window.label("codeChecker");
-		conditionNameText = window.textBox("conditionNameText");
-		conditionCodeText = window.textBox("conditionCodeText");
-		okButton = window.button(OK_BUTTON);
-		cancelButton = window.button(CANCEL_BUTTON);
+		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 	
+	private boolean setupVariables() {
+		labelName = window.label(LABEL_NAME);
+		labelCode = window.label(LABEL_CODE);
+		comment = window.label(COMMENT);
+		nameChecker = window.label(NAME_CHECKER);
+		codeChecker = window.label(CODE_CHECKER);
+		conditionNameText = window.textBox(CONDITION_NAME_TEXT);
+		conditionCodeText = window.textBox(CONDITION_CODE_TEXT);
+		okButton = window.button(OK_BUTTON);
+		cancelButton = window.button(CANCEL_BUTTON);
+		return true;
+	}
+
 	@Override
 	protected void onTearDown() {
 		window=null;

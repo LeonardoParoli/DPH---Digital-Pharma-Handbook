@@ -15,7 +15,7 @@ import org.assertj.swing.fixture.JTableFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
-import org.assertj.swing.timing.Pause;
+import org.awaitility.Awaitility;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +71,6 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 	private static final String CONNECT_BUTTON = "connectButton";
 	private static final String DRUG_DESCRIPTION = "drugDescription";
 	private FrameFixture window;
-	private DBProxy proxy;
 
 	@Override
 	protected void onSetUp() {
@@ -79,6 +79,11 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(frame);
+		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
+		
+	}
+
+	private boolean setupVariables() {
 		this.mainContent = window.panel(MAIN_CONTENT);
 		this.conditionSelectionBox = mainContent.panel(CONDITION_SELECTION_BOX);
 		this.drugTableBox = mainContent.panel(DRUG_TABLE_BOX);
@@ -93,6 +98,7 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		this.removeDrugButton = drugTableBox.button(REMOVE_DRUG_BUTTON);
 		this.modifyDrugDescButton = drugDescBox.button(MODIFY_DESCRIPTION_BUTTON);
 		this.connectButton = drugDescBox.button(CONNECT_BUTTON);
+		return true;
 	}
 
 	@Override
