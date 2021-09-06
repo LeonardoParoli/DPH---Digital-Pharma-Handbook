@@ -30,6 +30,7 @@ import com.dph.informationModel.Drug;
 @RunWith(GUITestRunner.class)
 public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 
+	private static final String DRUG_DESC_SCROLL = "drugDescScroll";
 	private static final String CONTENT_PANEL = "contentPanel";
 	private static final String SCROLL_PANEL = "scrollPanel";
 	private static final String BUTTON_PANEL = "buttonPanel";
@@ -69,6 +70,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private JPanelFixture contentPanel;
 	private JScrollPaneFixture scrollPanel;
 	private JPanelFixture buttonPanel;
+	private JScrollPaneFixture drugDescScrollPanel;
 
 	@Override
 	protected void onSetUp() throws Exception {
@@ -79,7 +81,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		Awaitility.given().ignoreExceptions().await().atMost(20, TimeUnit.SECONDS).until(() -> setupVariables());
+		Awaitility.given().ignoreExceptions().await().atMost(60, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 
 	private boolean setupVariables() {
@@ -101,6 +103,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 				this.okButton = buttonPanel.button(OK_BUTTON);
 				this.cancelButton = buttonPanel.button(CANCEL_BUTTON);
 				this.drugDescLabel = contentPanel.label(DRUG_DESC_LABEL);
+				this.drugDescScrollPanel = contentPanel.scrollPane(DRUG_DESC_SCROLL);
 				this.drugDescText = contentPanel.textBox(DRUG_DESC_TEXT);
 				this.descChecker = contentPanel.label(DESC_CHECKER);
 				this.findButton = contentPanel.button(FIND_BUTTON);
@@ -135,6 +138,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		okButton = null;
 		cancelButton = null;
 		model = null;
+		drugDescScrollPanel = null;
 		drugDescLabel = null;
 		drugDescText = null;
 		descChecker = null;

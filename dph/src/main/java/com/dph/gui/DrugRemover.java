@@ -29,7 +29,6 @@ public class DrugRemover extends JDialog {
 	 * Create the dialog.
 	 */
 	public DrugRemover(String drugCode, String drugName, double drugDosage) {
-		setAlwaysOnTop(true);
 		setFont(new Font("Dialog", Font.PLAIN, 12));
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setResizable(false);

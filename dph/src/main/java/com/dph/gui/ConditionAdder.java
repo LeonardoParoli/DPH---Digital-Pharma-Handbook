@@ -3,6 +3,7 @@ package com.dph.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -43,9 +44,9 @@ public class ConditionAdder extends JDialog {
 	 */
 	public ConditionAdder(DefaultComboBoxModel<Condition> conditionModel) {
 		this.model = conditionModel;
+		setFont(new Font("Dialog", Font.PLAIN, 12));
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setAlwaysOnTop(true);
 		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330, 206));
 		getContentPane().setLayout(new BorderLayout());

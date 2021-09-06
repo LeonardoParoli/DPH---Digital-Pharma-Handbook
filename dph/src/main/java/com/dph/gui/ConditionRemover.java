@@ -3,6 +3,7 @@ package com.dph.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -27,8 +28,8 @@ public class ConditionRemover extends JDialog {
 	 * Create the dialog.
 	 */
 	public ConditionRemover(String conditionCode, String conditionName) {
+		setFont(new Font("Dialog", Font.PLAIN, 12));
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setAlwaysOnTop(true);
 		setResizable(false);
 		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330,206));

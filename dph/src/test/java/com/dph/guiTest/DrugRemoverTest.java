@@ -47,7 +47,7 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
-		Awaitility.given().ignoreExceptions().await().atMost(20, TimeUnit.SECONDS).until(() -> setupVariables());
+		Awaitility.given().ignoreExceptions().await().atMost(60, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 
 	private boolean setupVariables() {
