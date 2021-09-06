@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.edt.GuiQuery;
+import org.assertj.swing.edt.GuiTask;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
@@ -38,6 +39,8 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(dialog);
+		window.focus();
+		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 	}
 	
@@ -51,6 +54,12 @@ public class ConditionRemoverTest extends AssertJSwingJUnitTestCase {
 
 	@Override
 	protected void onTearDown() {
+		GuiActionRunner.execute(new GuiTask() {
+			@Override
+			protected void executeInEDT() throws Throwable {
+				window.target().dispose();
+			}
+		});
 		this.okButton=null;
 		this.cancelButton=null;
 		this.conditionCodeLabel=null;

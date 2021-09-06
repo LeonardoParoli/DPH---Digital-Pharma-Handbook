@@ -79,6 +79,8 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
 		robot().showWindow(frame);
+		window.focus();
+		window.requireFocused();
 		Awaitility.given().ignoreExceptions().await().atMost(10, TimeUnit.SECONDS).until(() -> setupVariables());
 		
 	}
@@ -103,6 +105,12 @@ public class UserInterfaceTest extends AssertJSwingJUnitTestCase {
 
 	@Override
 	protected void onTearDown() {
+		GuiActionRunner.execute(new GuiTask() {
+			@Override
+			protected void executeInEDT() throws Throwable {
+				window.target().dispose();
+			}
+		});
 		this.mainContent = null;
 		this.conditionSelectionBox = null;
 		this.drugTableBox = null;
