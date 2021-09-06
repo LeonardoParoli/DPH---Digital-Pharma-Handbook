@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Font;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class DrugRemover extends JDialog {
 
@@ -40,29 +42,44 @@ public class DrugRemover extends JDialog {
 		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
 
 		lastButtonPressed="";
 		
 		JLabel confirmation = new JLabel("Are you sure you wish to delete this entry?");
 		confirmation.setHorizontalAlignment(SwingConstants.CENTER);
-		confirmation.setBounds(10, 11, 294, 14);
-		contentPanel.add(confirmation);
 
 		drugCodeLabel = new JLabel("Drug Code: " + drugCode);
-		drugCodeLabel.setBounds(10, 48, 294, 14);
 		drugCodeLabel.setName("drugCodeLabel");
-		contentPanel.add(drugCodeLabel);
 
 		drugNameLabel = new JLabel("Drug Name: " + drugName);
-		drugNameLabel.setBounds(10, 73, 294, 14);
 		drugNameLabel.setName("drugNameLabel");
-		contentPanel.add(drugNameLabel);
 
 		drugDosageLabel = new JLabel("Drug Dosage: " + drugDosage);
-		drugDosageLabel.setBounds(10, 98, 294, 14);
 		drugDosageLabel.setName("drugDosageLabel");
-		contentPanel.add(drugDosageLabel);
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(5)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(confirmation, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
+						.addComponent(drugCodeLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
+						.addComponent(drugNameLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
+						.addComponent(drugDosageLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)))
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(6)
+					.addComponent(confirmation)
+					.addGap(23)
+					.addComponent(drugCodeLabel)
+					.addGap(11)
+					.addComponent(drugNameLabel)
+					.addGap(11)
+					.addComponent(drugDosageLabel))
+		);
+		contentPanel.setLayout(gl_contentPanel);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setName("buttonPanel");
@@ -91,7 +108,6 @@ public class DrugRemover extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
-
 	}
 	
 	public String getLastButtonPressed() {

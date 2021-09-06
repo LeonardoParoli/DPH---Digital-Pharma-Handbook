@@ -77,24 +77,18 @@ public class DrugAdder extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPanel.setLayout(null);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		lastButtonPressed = "";
 		
 		drugCodeLabel = new JLabel("Drug Code:");
-		drugCodeLabel.setBounds(10, 80, 183, 14);
 		drugCodeLabel.setName("drugCodeLabel");
-		contentPanel.add(drugCodeLabel);
 		
 		drugCodeText = new JTextField();
-		drugCodeText.setBounds(10, 92, 149, 20);
 		drugCodeText.setName("drugCodeText");
 		drugCodeText.setColumns(10);
-		contentPanel.add(drugCodeText);
 		
 		scrollPaneComment = new JScrollPane();
-		scrollPaneComment.setBounds(10, 7, 304, 54);
 		scrollPaneComment.setName("scrollPanel");
 		comment = new JTextPane();
 		comment.setBackground(SystemColor.control);
@@ -103,62 +97,42 @@ public class DrugAdder extends JDialog {
 				"Insert the code of the drug you wish to associate with the selected condition. If the code isn't in the database, you'll have to give the necessary data of the drug you wish to add.");
 		comment.setName("comment");
 		scrollPaneComment.setViewportView(comment);
-		contentPanel.add(scrollPaneComment);
 
 		drugNameLabel = new JLabel("Drug Name:");
-		drugNameLabel.setBounds(10, 122, 149, 14);
 		drugNameLabel.setName("drugNameLabel");
-		contentPanel.add(drugNameLabel);
 		
 		codeChecker = new JLabel(AWAITING_CHECK);
-		codeChecker.setBounds(248, 95, 74, 14);
 		codeChecker.setName("codeChecker");
 		codeChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(codeChecker);
 		
 		drugNameText = new JTextField();
-		drugNameText.setBounds(10, 136, 228, 20);
 		drugNameText.setEnabled(false);
 		drugNameText.setName("drugNameText");
 		drugNameText.setColumns(10);
-		contentPanel.add(drugNameText);
 		
 		drugDosageLabel = new JLabel("Drug Dosage:");
-		drugDosageLabel.setBounds(10, 179, 149, 14);
 		drugDosageLabel.setName("drugDosageLabel");
-		contentPanel.add(drugDosageLabel);
 		
 		drugDosageText = new JTextField();
-		drugDosageText.setBounds(10, 192, 228, 20);
 		drugDosageText.setName("drugDosageText");
 		drugDosageText.setColumns(10);
-		contentPanel.add(drugDosageText);
 		
 		dosageChecker = new JLabel(AWAITING_CHECK);
-		dosageChecker.setBounds(248, 195, 74, 14);
 		dosageChecker.setName("dosageChecker");
 		dosageChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(dosageChecker);
 		
 		nameChecker = new JLabel(AWAITING_CHECK);
-		nameChecker.setBounds(248, 139, 74, 14);
 		nameChecker.setName("nameChecker");
 		nameChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(nameChecker);
 
 		drugDescLabel = new JLabel("Drug Description:");
-		drugDescLabel.setBounds(10, 223, 149, 14);
 		drugDescLabel.setName("drugDescLabel");
-		contentPanel.add(drugDescLabel);
 		
 		descChecker = new JLabel(AWAITING_CHECK);
-		descChecker.setBounds(248, 269, 74, 14);
 		descChecker.setName("descChecker");
 		descChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(descChecker);
 
 		findButton = new JButton("Find");
-		findButton.setBounds(169, 91, 62, 21);
 		findButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String code = drugCodeText.getText();
@@ -188,18 +162,90 @@ public class DrugAdder extends JDialog {
 			}
 		});
 		findButton.setName("findButton");
-		contentPanel.add(findButton);
 		
 		JScrollPane scrollPaneDesc = new JScrollPane();
 		scrollPaneDesc.setName("drugDescScroll");
-		scrollPaneDesc.setBounds(10, 237, 228, 128);
-		contentPanel.add(scrollPaneDesc);
 		
 		drugDescText = new JTextField();
 		drugDescText.setEnabled(false);
 		drugDescText.setName("drugDescText");
 		scrollPaneDesc.setViewportView(drugDescText);
 		drugDescText.setColumns(10);
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(5)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneComment, GroupLayout.PREFERRED_SIZE, 304, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(drugCodeText, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+								.addComponent(drugCodeLabel, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPanel.createSequentialGroup()
+									.addGap(159)
+									.addComponent(findButton, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)))
+							.addGap(17)
+							.addComponent(codeChecker, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE))
+						.addComponent(drugNameLabel, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addComponent(drugNameText, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(nameChecker, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(drugDosageText, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+								.addComponent(drugDosageLabel, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))
+							.addGap(10)
+							.addComponent(dosageChecker, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE))
+						.addComponent(drugDescLabel, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addComponent(scrollPaneDesc, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(descChecker, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE))))
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(2)
+					.addComponent(scrollPaneComment, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+					.addGap(19)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(12)
+							.addComponent(drugCodeText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(drugCodeLabel)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(11)
+							.addComponent(findButton, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(15)
+							.addComponent(codeChecker)))
+					.addGap(10)
+					.addComponent(drugNameLabel)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(drugNameText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(3)
+							.addComponent(nameChecker)))
+					.addGap(23)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(13)
+							.addComponent(drugDosageText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(drugDosageLabel)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(16)
+							.addComponent(dosageChecker)))
+					.addGap(11)
+					.addComponent(drugDescLabel)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneDesc, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(32)
+							.addComponent(descChecker))))
+		);
+		contentPanel.setLayout(gl_contentPanel);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setName("buttonPanel");
@@ -239,7 +285,6 @@ public class DrugAdder extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
-
 	}
 
 	public String getLastButtonPressed() {

@@ -21,6 +21,8 @@ import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class ConditionAdder extends JDialog {
 
@@ -55,50 +57,79 @@ public class ConditionAdder extends JDialog {
 		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
 
 		lastButtonPressed = "";
 
 		conditionCodeText = new JTextField();
 		conditionCodeText.setName("conditionCodeText");
-		conditionCodeText.setBounds(10, 49, 228, 20);
-		contentPanel.add(conditionCodeText);
 		conditionCodeText.setColumns(10);
 
 		conditionNameText = new JTextField();
 		conditionNameText.setName("conditionNameText");
 		conditionNameText.setColumns(10);
-		conditionNameText.setBounds(10, 103, 228, 20);
-		contentPanel.add(conditionNameText);
 
 		codeChecker = new JLabel("---");
 		codeChecker.setName("codeChecker");
 		codeChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		codeChecker.setBounds(248, 52, 46, 14);
-		contentPanel.add(codeChecker);
 
 		comment = new JLabel("Insert new condition code and name:");
 		comment.setName("comment");
 		comment.setHorizontalAlignment(SwingConstants.CENTER);
-		comment.setBounds(0, 11, 314, 14);
-		contentPanel.add(comment);
 
 		labelCode = new JLabel("Condition Code:");
 		labelCode.setName("labelCode");
-		labelCode.setBounds(10, 37, 183, 14);
-		contentPanel.add(labelCode);
 
 		labelName = new JLabel("Condition name:");
 		labelName.setName("labelName");
 		labelName.setText("Condition Name:");
-		labelName.setBounds(10, 90, 149, 14);
-		contentPanel.add(labelName);
 
 		nameChecker = new JLabel("---");
 		nameChecker.setName("nameChecker");
 		nameChecker.setHorizontalAlignment(SwingConstants.CENTER);
-		nameChecker.setBounds(248, 106, 46, 14);
-		contentPanel.add(nameChecker);
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addComponent(comment, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(10)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(labelCode, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+						.addComponent(conditionCodeText, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE))
+					.addGap(10)
+					.addComponent(codeChecker, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(10)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(conditionNameText, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+						.addComponent(labelName, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))
+					.addGap(10)
+					.addComponent(nameChecker, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(6)
+					.addComponent(comment)
+					.addGap(12)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(labelCode)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(12)
+							.addComponent(conditionCodeText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(15)
+							.addComponent(codeChecker)))
+					.addGap(21)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(13)
+							.addComponent(conditionNameText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(labelName)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGap(16)
+							.addComponent(nameChecker))))
+		);
+		contentPanel.setLayout(gl_contentPanel);
 
 		buttonPane = new JPanel();
 		buttonPane.setName("buttonPanel");

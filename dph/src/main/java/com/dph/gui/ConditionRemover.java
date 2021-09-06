@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class ConditionRemover extends JDialog {
 
@@ -39,25 +41,42 @@ public class ConditionRemover extends JDialog {
 		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
 
 		lastButtonPressed="";
 		
 		JLabel confirmation = new JLabel("Are you sure you wish to delete this entry?");
 		confirmation.setName("comment");
-		confirmation.setBounds(53, 10, 207, 14);
 		confirmation.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(confirmation);
 
 		conditionCodeLabel = new JLabel("Condition Code: " + conditionCode);
 		conditionCodeLabel.setName("conditionCodeLabel");
-		conditionCodeLabel.setBounds(10, 45, 294, 14);
-		contentPanel.add(conditionCodeLabel);
 
 		conditionNameLabel = new JLabel("Condition Name: " + conditionName);
 		conditionNameLabel.setName("conditionNameLabel");
-		conditionNameLabel.setBounds(10, 70, 294, 14);
-		contentPanel.add(conditionNameLabel);
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(48)
+					.addComponent(confirmation))
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(5)
+					.addComponent(conditionCodeLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(5)
+					.addComponent(conditionNameLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addGap(5)
+					.addComponent(confirmation)
+					.addGap(21)
+					.addComponent(conditionCodeLabel)
+					.addGap(11)
+					.addComponent(conditionNameLabel))
+		);
+		contentPanel.setLayout(gl_contentPanel);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setName("buttonPanel");
@@ -86,7 +105,6 @@ public class ConditionRemover extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
-
 	}
 	
 	public String getLastButtonPressed() {
