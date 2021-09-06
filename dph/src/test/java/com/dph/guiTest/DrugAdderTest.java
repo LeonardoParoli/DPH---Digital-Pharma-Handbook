@@ -14,6 +14,8 @@ import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
+import org.assertj.swing.fixture.JPanelFixture;
+import org.assertj.swing.fixture.JScrollPaneFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -28,6 +30,9 @@ import com.dph.informationModel.Drug;
 @RunWith(GUITestRunner.class)
 public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 
+	private static final String CONTENT_PANEL = "contentPanel";
+	private static final String SCROLL_PANEL = "scrollPanel";
+	private static final String BUTTON_PANEL = "buttonPanel";
 	private static final String FIND_BUTTON = "findButton";
 	private static final String DRUG_DESC_LABEL = "drugDescLabel";
 	private static final String DRUG_DESC_TEXT = "drugDescText";
@@ -35,7 +40,6 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private static final String NAME_CHECKER = "nameChecker";
 	private static final String DOSAGE_CHECKER = "dosageChecker";
 	private static final String CODE_CHECKER = "codeChecker";
-	private static final String COMMENT = "comment";
 	private static final String DRUG_DOSAGE_LABEL = "drugDosageLabel";
 	private static final String DRUG_NAME_LABEL = "drugNameLabel";
 	private static final String DRUG_CODE_LABEL = "drugCodeLabel";
@@ -51,7 +55,6 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private JTextComponentFixture drugDosageText;
 	private JTextComponentFixture drugNameText;
 	private JLabelFixture drugCodeLabel;
-	private JTextComponentFixture comment;
 	private JLabelFixture drugNameLabel;
 	private JLabelFixture codeChecker;
 	private JLabelFixture drugDosageLabel;
@@ -63,6 +66,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private JLabelFixture descChecker;
 	private JButtonFixture findButton;
 	private Condition condition;
+	private JPanelFixture contentPanel;
+	private JScrollPaneFixture scrollPanel;
+	private JPanelFixture buttonPanel;
 
 	@Override
 	protected void onSetUp() throws Exception {
@@ -80,22 +86,24 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		boolean condition = false;
 		while (!condition) {
 			try {
-				this.drugCodeText = window.textBox(DRUG_CODE_TEXT);
-				this.drugDosageText = window.textBox(DRUG_DOSAGE_TEXT);
-				this.drugNameText = window.textBox(DRUG_NAME_TEXT);
-				this.drugCodeLabel = window.label(DRUG_CODE_LABEL);
-				this.drugNameLabel = window.label(DRUG_NAME_LABEL);
-				this.drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
-				this.comment = window.textBox(COMMENT);
-				this.codeChecker = window.label(CODE_CHECKER);
-				this.dosageChecker = window.label(DOSAGE_CHECKER);
-				this.nameChecker = window.label(NAME_CHECKER);
-				this.okButton = window.button(OK_BUTTON);
-				this.cancelButton = window.button(CANCEL_BUTTON);
-				this.drugDescLabel = window.label(DRUG_DESC_LABEL);
-				this.drugDescText = window.textBox(DRUG_DESC_TEXT);
-				this.descChecker = window.label(DESC_CHECKER);
-				this.findButton = window.button(FIND_BUTTON);
+				this.contentPanel = window.panel(CONTENT_PANEL);
+				this.scrollPanel = contentPanel.scrollPane(SCROLL_PANEL);
+				this.drugCodeText = contentPanel.textBox(DRUG_CODE_TEXT);
+				this.drugDosageText = contentPanel.textBox(DRUG_DOSAGE_TEXT);
+				this.drugNameText = contentPanel.textBox(DRUG_NAME_TEXT);
+				this.drugCodeLabel = contentPanel.label(DRUG_CODE_LABEL);
+				this.drugNameLabel = contentPanel.label(DRUG_NAME_LABEL);
+				this.drugDosageLabel = contentPanel.label(DRUG_DOSAGE_LABEL);
+				this.codeChecker = contentPanel.label(CODE_CHECKER);
+				this.dosageChecker = contentPanel.label(DOSAGE_CHECKER);
+				this.nameChecker = contentPanel.label(NAME_CHECKER);
+				this.buttonPanel = window.panel(BUTTON_PANEL);
+				this.okButton = buttonPanel.button(OK_BUTTON);
+				this.cancelButton = buttonPanel.button(CANCEL_BUTTON);
+				this.drugDescLabel = contentPanel.label(DRUG_DESC_LABEL);
+				this.drugDescText = contentPanel.textBox(DRUG_DESC_TEXT);
+				this.descChecker = contentPanel.label(DESC_CHECKER);
+				this.findButton = contentPanel.button(FIND_BUTTON);
 				condition = true;
 			} catch (ComponentLookupException e) {
 				condition = false;
@@ -112,13 +120,15 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 				window.target().dispose();
 			}
 		});
+		contentPanel = null;
+		buttonPanel = null;
+		scrollPanel = null;
 		drugCodeText = null;
 		drugDosageText = null;
 		drugNameText = null;
 		drugCodeLabel = null;
 		drugNameLabel = null;
 		drugDosageLabel = null;
-		comment = null;
 		codeChecker = null;
 		dosageChecker = null;
 		nameChecker = null;
@@ -141,8 +151,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		drugCodeLabel.requireVisible().requireText("Drug Code:").requireEnabled();
 		drugNameLabel.requireVisible().requireText("Drug Name:").requireEnabled();
 		drugDosageLabel.requireVisible().requireText("Drug Dosage:").requireEnabled();
-		comment.requireVisible().requireText(
-				"Insert the code of the drug you wish to associate with the selected condition. If the code isn't in the database, you'll have to give the necessary data of the drug you wish to add.");
+		scrollPanel.requireVisible();
 		codeChecker.requireVisible().requireText("---");
 		nameChecker.requireVisible().requireText("---");
 		dosageChecker.requireVisible().requireText("---");

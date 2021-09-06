@@ -12,6 +12,7 @@ import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
+import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.awaitility.Awaitility;
@@ -23,6 +24,8 @@ import com.dph.gui.DrugRemover;
 @RunWith(GUITestRunner.class)
 public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 
+	private static final String CONTENT_PANEL = "contentPanel";
+	private static final String BUTTON_PANEL = "buttonPanel";
 	private static final String CANCEL_BUTTON = "cancelButton";
 	private static final String OK_BUTTON = "OKButton";
 	private static final String DRUG_DOSAGE_LABEL = "drugDosageLabel";
@@ -34,6 +37,8 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 	private JLabelFixture drugDosageLabel;
 	private JButtonFixture okButton;
 	private JButtonFixture cancelButton;
+	private JPanelFixture contentPanel;
+	private JPanelFixture buttonPanel;
 
 	@Override
 	protected void onSetUp() throws Exception {
@@ -49,11 +54,13 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		boolean condition = false;
 		while (!condition) {
 			try {
-				this.drugNameLabel = window.label(DRUG_NAME_LABEL);
-				this.drugCodeLabel = window.label(DRUG_CODE_LABEL);
-				this.drugDosageLabel = window.label(DRUG_DOSAGE_LABEL);
-				this.okButton = window.button(OK_BUTTON);
-				this.cancelButton = window.button(CANCEL_BUTTON);
+				this.contentPanel = window.panel(CONTENT_PANEL);
+				this.buttonPanel = window.panel(BUTTON_PANEL);
+				this.drugNameLabel = contentPanel.label(DRUG_NAME_LABEL);
+				this.drugCodeLabel = contentPanel.label(DRUG_CODE_LABEL);
+				this.drugDosageLabel = contentPanel.label(DRUG_DOSAGE_LABEL);
+				this.okButton = buttonPanel.button(OK_BUTTON);
+				this.cancelButton = buttonPanel.button(CANCEL_BUTTON);
 				condition = true;
 			} catch (ComponentLookupException e) {
 				condition = false;
@@ -70,6 +77,8 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 				window.target().dispose();
 			}
 		});
+		this.contentPanel = null;
+		this.buttonPanel = null;
 		this.drugCodeLabel = null;
 		this.drugCodeLabel = null;
 		this.drugDosageLabel = null;

@@ -49,6 +49,7 @@ public class ConditionAdder extends JDialog {
 		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330, 206));
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -97,6 +98,7 @@ public class ConditionAdder extends JDialog {
 		contentPanel.add(nameChecker);
 
 		buttonPane = new JPanel();
+		buttonPane.setName("buttonPanel");
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 

@@ -15,6 +15,7 @@ import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
+import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -28,6 +29,7 @@ import com.dph.informationModel.Dosage;
 @RunWith(GUITestRunner.class)
 public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 
+	private static final String CONTENT_PANEL = "contentPanel";
 	private static final String LABEL_NAME = "labelName";
 	private static final String LABEL_CODE = "labelCode";
 	private static final String COMMENT = "comment";
@@ -48,6 +50,8 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 	private JTextComponentFixture conditionCodeText;
 	private JLabelFixture nameChecker;
 	private DefaultComboBoxModel<Condition> model;
+	private JPanelFixture contentPanel;
+	private JPanelFixture buttonPanel;
 
 	@Override
 	protected void onSetUp() throws Exception {
@@ -64,15 +68,17 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		boolean condition = false;
 		while (!condition) {
 			try {
-				this.labelName = window.label(LABEL_NAME);
-				this.labelCode = window.label(LABEL_CODE);
-				this.comment = window.label(COMMENT);
-				this.nameChecker = window.label(NAME_CHECKER);
-				this.codeChecker = window.label(CODE_CHECKER);
-				this.conditionNameText = window.textBox(CONDITION_NAME_TEXT);
-				this.conditionCodeText = window.textBox(CONDITION_CODE_TEXT);
-				this.okButton = window.button(OK_BUTTON);
-				this.cancelButton = window.button(CANCEL_BUTTON);
+				this.contentPanel = window.panel(CONTENT_PANEL);
+				this.labelName = contentPanel.label(LABEL_NAME);
+				this.labelCode = contentPanel.label(LABEL_CODE);
+				this.comment = contentPanel.label(COMMENT);
+				this.nameChecker = contentPanel.label(NAME_CHECKER);
+				this.codeChecker = contentPanel.label(CODE_CHECKER);
+				this.conditionNameText = contentPanel.textBox(CONDITION_NAME_TEXT);
+				this.conditionCodeText = contentPanel.textBox(CONDITION_CODE_TEXT);
+				this.buttonPanel = window.panel("buttonPanel");
+				this.okButton = buttonPanel.button(OK_BUTTON);
+				this.cancelButton = buttonPanel.button(CANCEL_BUTTON);
 				condition = true;
 			} catch (ComponentLookupException e) {
 				condition = false;
@@ -90,6 +96,8 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 			}
 		});
 		window = null;
+		contentPanel = null;
+		buttonPanel=null;
 		labelName = null;
 		labelCode = null;
 		comment = null;

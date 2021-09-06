@@ -70,6 +70,7 @@ public class DrugAdder extends JDialog {
 		setBounds(10, 10, 337, 448);
 		setMinimumSize(new Dimension(337, 448));
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -88,6 +89,7 @@ public class DrugAdder extends JDialog {
 		contentPanel.add(drugCodeText);
 		
 		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setName("scrollPanel");
 		scrollPane_1.setBounds(10, 7, 304, 54);
 		contentPanel.add(scrollPane_1);
 
@@ -195,6 +197,7 @@ public class DrugAdder extends JDialog {
 		contentPanel.add(findButton);
 
 		JPanel buttonPane = new JPanel();
+		buttonPane.setName("buttonPanel");
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 

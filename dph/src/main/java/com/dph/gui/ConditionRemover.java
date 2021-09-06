@@ -33,6 +33,7 @@ public class ConditionRemover extends JDialog {
 		setBounds(10, 10, 330, 206);
 		setMinimumSize(new Dimension(330,206));
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -40,6 +41,7 @@ public class ConditionRemover extends JDialog {
 		lastButtonPressed="";
 		
 		JLabel confirmation = new JLabel("Are you sure you wish to delete this entry?");
+		confirmation.setName("comment");
 		confirmation.setBounds(53, 10, 207, 14);
 		confirmation.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPanel.add(confirmation);
@@ -55,6 +57,7 @@ public class ConditionRemover extends JDialog {
 		contentPanel.add(conditionNameLabel);
 
 		JPanel buttonPane = new JPanel();
+		buttonPane.setName("buttonPanel");
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
