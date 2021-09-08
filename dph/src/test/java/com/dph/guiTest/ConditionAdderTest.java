@@ -92,7 +92,7 @@ public class ConditionAdderTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {
-				window.target().dispose();
+				window.cleanUp();
 			}
 		});
 		window = null;

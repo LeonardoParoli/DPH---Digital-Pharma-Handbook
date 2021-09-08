@@ -74,7 +74,7 @@ public class DrugRemoverTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {
-				window.target().dispose();
+				window.cleanUp();
 			}
 		});
 		this.contentPanel = null;

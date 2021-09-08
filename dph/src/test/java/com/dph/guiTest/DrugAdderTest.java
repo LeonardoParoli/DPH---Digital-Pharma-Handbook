@@ -69,12 +69,13 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 	private JPanelFixture contentPanel;
 	private JScrollPaneFixture scrollPanel;
 	private JPanelFixture buttonPanel;
+	private DrugAdder dialog;
 	
 	@Override
 	protected void onSetUp() throws Exception {
 		model = new ArrayList<>();
 		condition = new Condition("conditionCode", "conditionName", new ArrayList<Dosage>());
-		DrugAdder dialog = GuiActionRunner.execute(() -> new DrugAdder(model, condition));
+		dialog = GuiActionRunner.execute(() -> new DrugAdder(model, condition));
 		window = new DialogFixture(robot(), dialog);
 		robot().settings().eventPostingDelay(500);
 		robot().settings().delayBetweenEvents(60);
@@ -117,7 +118,7 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {
-				window.target().dispose();
+				window.cleanUp();
 			}
 		});
 		contentPanel = null;
