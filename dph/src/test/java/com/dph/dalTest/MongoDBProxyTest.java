@@ -342,6 +342,93 @@ public class MongoDBProxyTest {
 		  .hasMessageContaining("Given Drug code doesn't match any existing entry.");
 	}
 	
+	@Test
+	public void updatePopulatedDatabaseSuccessTest() throws IOException {
+		List<Condition> updatingModel = new ArrayList<>();
+		addTestDrugToDatabase("001","test1","testDesc");
+		addTestDrugToDatabase("002","test2","testDesc");
+		Drug drug1 = new Drug ("001", "test1" , "testDesc");
+		Drug drug2 = new Drug ("002", "test2" , "testDesc");
+		Drug drug3 = new Drug ("003", "test3" , "testDesc");
+		List<Dosage> dosages1 = new ArrayList<>();
+		dosages1.add(new Dosage(drug1,1.0));
+		dosages1.add(new Dosage(drug2,1.0));
+		addTestConditionToDatabase("condition1Code","condition1Name", dosages1);
+		List<Dosage> dosages2 = new ArrayList<>();
+		dosages2.add(new Dosage(drug1, 2.0));
+		dosages2.add(new Dosage(drug2, 3.0));
+		addTestConditionToDatabase("condition2Code","condition2Name", dosages2);
+		assertThat(proxy.findAllConditions()).containsExactly(new Condition("condition1Code","condition1Name", dosages1), new Condition("condition2Code", "condition2Name", dosages2));
+		assertThat(proxy.findAllDrugs()).containsExactly(drug1,drug2);
+		dosages1.clear();
+		dosages2.clear();
+		drug1 = new Drug("001", "test1Different", "testDesc");
+		drug2 = new Drug("002", "test2", "testDescDifferent");
+		dosages1.add(new Dosage(drug1,1.0));
+		dosages1.add(new Dosage(drug2,2.0));
+		dosages2.add(new Dosage(drug1,1.0));
+		dosages2.add(new Dosage(drug2,2.0));
+		dosages2.add(new Dosage(drug3, 4.0));
+		Condition condition1 = new Condition("condition1Code", "condition2Name", dosages1);
+		Condition condition2 = new Condition("condition2Code", "condition2NameDifferent", dosages2);
+		Condition condition3 = new Condition("condition3Code", "condition3Name", dosages2);
+		updatingModel.add(condition1);
+		updatingModel.add(condition2);
+		updatingModel.add(condition3);
+		proxy.updateDatabase(updatingModel);
+		assertThat(proxy.findAllConditions()).containsExactly(condition1,condition2, condition3);
+		assertThat(proxy.findAllDrugs()).containsExactly(drug1,drug2,drug3);
+	}
+	
+	@Test
+	public void updateEmptyDatabaseSuccessTest() throws IOException {
+		List<Condition> updatingModel = new ArrayList<>();
+		Drug drug1 = new Drug ("001", "test1" , "testDesc");
+		Drug drug2 = new Drug ("002", "test2" , "testDesc");
+		Drug drug3 = new Drug ("003", "test3" , "testDesc");
+		List<Dosage> dosages1 = new ArrayList<>();
+		dosages1.add(new Dosage(drug1,1.0));
+		dosages1.add(new Dosage(drug2,1.0));
+		List<Dosage> dosages2 = new ArrayList<>();
+		dosages2.add(new Dosage(drug1, 2.0));
+		dosages2.add(new Dosage(new Drug("002", "test2" , "testDesc"), 3.0));
+		dosages2.add(new Dosage(drug3, 4.0));
+		Condition condition1 = new Condition("condition1Code", "condition2Name", dosages1);
+		Condition condition2 = new Condition("condition2Code", "condition2Name", dosages2);
+		updatingModel.add(condition1);
+		updatingModel.add(condition2);
+		proxy.updateDatabase(updatingModel);
+		assertThat(proxy.findAllConditions()).containsExactly(condition1,condition2);
+		assertThat(proxy.findAllDrugs()).containsExactly(drug1,drug2,drug3);
+	}
+	
+	@Test
+	public void updateDatabaseFailByInconsistentUpdatingModelTest() {
+		List<Condition> updatingModel = new ArrayList<>();
+		Drug drug1 = new Drug ("001", "test1" , "testDesc");
+		Drug drug2 = new Drug ("002", "test2DIFFERENT" , "testDesc");
+		Drug drug3 = new Drug ("003", "test3" , "testDesc");
+		addTestDrugToDatabase("001","test1","testDesc");
+		addTestDrugToDatabase("002","test2","testDesc");
+		addTestDrugToDatabase("003","test3","testDesc");
+		List<Dosage> dosages1 = new ArrayList<>();
+		dosages1.add(new Dosage(drug1,1.0));
+		dosages1.add(new Dosage(drug2,1.0));
+		List<Dosage> dosages2 = new ArrayList<>();
+		dosages2.add(new Dosage(drug1, 2.0));
+		dosages2.add(new Dosage(new Drug("002", "test2INCONSISTENT" , "testDesc"), 3.0)); //Inconsistent drug entry.
+		dosages2.add(new Dosage(drug3, 4.0));
+		Condition condition1 = new Condition("condition1Code", "condition2Name", dosages1);
+		Condition condition2 = new Condition("condition2Code", "condition2Name", dosages2);
+		updatingModel.add(condition1);
+		updatingModel.add(condition2);
+		assertThatThrownBy(() -> {
+			proxy.updateDatabase(updatingModel);
+		}).isInstanceOf(IOException.class)
+		  .hasMessageContaining("Given Model is inconsistent. Cannot update the database.");
+		
+	}
+	
 	private void addTestConditionToDatabase(String code, String name, List<Dosage> dosageList) {
 		List<Document> dosages = new ArrayList<>();
 		for (Dosage dosage : dosageList) {

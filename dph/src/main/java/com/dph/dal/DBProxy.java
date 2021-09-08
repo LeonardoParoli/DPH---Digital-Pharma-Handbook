@@ -18,7 +18,7 @@ public interface DBProxy {
 	public Condition findConditionById(String id) throws IOException;
 
 	public Drug findDrugById(String id) throws IOException;
-
+	
 	public void save(Condition condition) throws IOException;
 
 	public void save(Drug drug) throws IOException;
@@ -34,4 +34,6 @@ public interface DBProxy {
 	public boolean hasDrugById(String string);
 
 	public boolean hasConditionById(String string);
+	
+	public void updateDatabase(List<Condition> model) throws IOException;
 }
