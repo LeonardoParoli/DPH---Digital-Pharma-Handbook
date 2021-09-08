@@ -1,0 +1,58 @@
+name: Java CI with Maven on Ubuntu
+
+on: 
+   push:
+      branches:
+         - master
+   pull_request:
+   workflow_dispatch:
+
+jobs:
+   build:
+      runs-on: ${{ matrix.os}}
+      env:
+         workdir: dph
+         additional-maven-args: >
+              -Pcoveralls
+              -DrepoToken=$COVERALLS_TOKEN
+      strategy:
+         matrix:
+            os: [ubuntu-latest]
+            java: [11]
+            
+      name: Build with Java ${{matrix.java}} on ${{matrix.os}}
+      steps:
+         - uses: actions/checkout@v2
+         - name: Set up JDK ${{ matrix.java }}
+           uses: actions/setup-java@v1
+           with:
+              java-version: ${{ matrix.java }}
+         - name: Cache Maven Packages
+           uses: actions/cache@v2
+           with:
+             path: ~/.m2
+             key: >
+                ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{hashFiles('**/pom.xml','**/*.yml')}}
+             restore-keys: ${{ runner.os }}-m2-
+         - name: Build with Maven
+           run: xvfb-run --auto-servernum --server-args "-screen 0 1600x1200x24" mvn verify ${{ matrix.additional-maven-args }}
+           working-directory: ${{ env.workdir }}
+           env: 
+              COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+         - name: Generate JUnit Report
+           run: >
+               mvn surefire-report:report-only site:site -DgenerateReports=false
+           working-directory: ${{ env.workdir }}
+           if: ${{ always() }}
+         - name: Archive JUnit Report
+           uses: actions/upload-artifact@v2
+           if: ${{ always() }}
+           with:
+              name: surefire-report-jdk-${{ matrix.java }}
+              path: '**/target/site'
+         - name: Archive Test Failure Screenshots
+           uses: actions/upload-artifact@v2
+           if: ${{ always() }}
+           with:
+              name: screenshots-report
+              path: '**/failed-gui-tests'

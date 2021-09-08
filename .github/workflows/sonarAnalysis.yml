@@ -37,5 +37,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=LeonardoParoli_DPH---Digital-Pharma-Handbook
+        run: xvfb-run --auto-servernum --server-args "-screen 0 1600x1200x24" mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=LeonardoParoli_DPH---Digital-Pharma-Handbook
         working-directory: ${{ env.workdir }}
