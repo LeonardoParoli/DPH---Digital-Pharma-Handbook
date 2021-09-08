@@ -118,7 +118,9 @@ public class DrugAdderTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(new GuiTask() {
 			@Override
 			protected void executeInEDT() throws Throwable {
-				window.cleanUp();
+				if(window != null) {
+					window.cleanUp();
+				}
 			}
 		});
 		contentPanel = null;
