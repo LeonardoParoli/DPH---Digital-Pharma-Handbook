@@ -12,9 +12,6 @@ jobs:
       runs-on: ${{ matrix.os}}
       env:
          workdir: dph
-         additional-maven-args: >
-              -Pcoveralls
-              -DrepoToken=$COVERALLS_TOKEN
       strategy:
          matrix:
             os: [ubuntu-latest]
@@ -35,10 +32,8 @@ jobs:
                 ${{ runner.os }}-m2-jdk${{ matrix.java }}-${{hashFiles('**/pom.xml','**/*.yml')}}
              restore-keys: ${{ runner.os }}-m2-
          - name: Build with Maven
-           run: xvfb-run --auto-servernum --server-args "-screen 0 1600x1200x24" mvn verify ${{ matrix.additional-maven-args }}
+           run: xvfb-run --auto-servernum --server-args "-screen 0 1600x1200x24" mvn verify
            working-directory: ${{ env.workdir }}
-           env: 
-              COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
          - name: Generate JUnit Report
            run: >
                mvn surefire-report:report-only site:site -DgenerateReports=false
