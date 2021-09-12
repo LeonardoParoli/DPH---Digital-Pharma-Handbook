@@ -54,7 +54,7 @@ public class MongoDBProxy implements DBProxy {
 			}
 			dsgList.add(new Dosage(
 					new Drug("" + drugInfo.get(codeKey), "" + drugInfo.get(nameKey), "" + drugInfo.get(descriptionKey)),
-					(double) dosage.get(dosage)));
+					(double) dosage.get(dosageKey)));
 		}
 		return new Condition("" + document.get(codeKey), "" + document.get(nameKey), dsgList);
 	}

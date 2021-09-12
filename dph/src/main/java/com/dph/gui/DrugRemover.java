@@ -9,8 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.GroupLayout;
@@ -37,14 +35,14 @@ public class DrugRemover extends JDialog {
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setResizable(false);
 		setBounds(10, 10, 330, 206);
-		setMinimumSize(new Dimension(330,206));
+		setMinimumSize(new Dimension(330, 206));
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setName("contentPanel");
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
-		lastButtonPressed="";
-		
+		lastButtonPressed = "";
+
 		JLabel confirmation = new JLabel("Are you sure you wish to delete this entry?");
 		confirmation.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -56,30 +54,19 @@ public class DrugRemover extends JDialog {
 
 		drugDosageLabel = new JLabel("Drug Dosage: " + drugDosage);
 		drugDosageLabel.setName("drugDosageLabel");
-		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
-		gl_contentPanel.setHorizontalGroup(
-			gl_contentPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPanel.createSequentialGroup()
-					.addGap(5)
-					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+		GroupLayout glContentPanel = new GroupLayout(contentPanel);
+		glContentPanel.setHorizontalGroup(glContentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(glContentPanel.createSequentialGroup().addGap(5).addGroup(glContentPanel
+						.createParallelGroup(Alignment.LEADING)
 						.addComponent(confirmation, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
 						.addComponent(drugCodeLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
 						.addComponent(drugNameLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)
-						.addComponent(drugDosageLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE)))
-		);
-		gl_contentPanel.setVerticalGroup(
-			gl_contentPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPanel.createSequentialGroup()
-					.addGap(6)
-					.addComponent(confirmation)
-					.addGap(23)
-					.addComponent(drugCodeLabel)
-					.addGap(11)
-					.addComponent(drugNameLabel)
-					.addGap(11)
-					.addComponent(drugDosageLabel))
-		);
-		contentPanel.setLayout(gl_contentPanel);
+						.addComponent(drugDosageLabel, GroupLayout.PREFERRED_SIZE, 294, GroupLayout.PREFERRED_SIZE))));
+		glContentPanel.setVerticalGroup(glContentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(glContentPanel.createSequentialGroup().addGap(6).addComponent(confirmation).addGap(23)
+						.addComponent(drugCodeLabel).addGap(11).addComponent(drugNameLabel).addGap(11)
+						.addComponent(drugDosageLabel)));
+		contentPanel.setLayout(glContentPanel);
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setName("buttonPanel");
@@ -87,11 +74,9 @@ public class DrugRemover extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
 		okButton = new JButton("OK");
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lastButtonPressed = okButton.getText();
-				setVisible(false);
-			}
+		okButton.addActionListener(e -> {
+			lastButtonPressed = okButton.getText();
+			setVisible(false);
 		});
 		okButton.setActionCommand("OK");
 		okButton.setName("OKButton");
@@ -100,18 +85,16 @@ public class DrugRemover extends JDialog {
 
 		cancelButton = new JButton("Cancel");
 		cancelButton.setName("cancelButton");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				lastButtonPressed = cancelButton.getText();
-				setVisible(false);
-			}
+		cancelButton.addActionListener(e -> {
+			lastButtonPressed = cancelButton.getText();
+			setVisible(false);
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
 	}
-	
+
 	public String getLastButtonPressed() {
 		return lastButtonPressed;
 	}
-	
+
 }
