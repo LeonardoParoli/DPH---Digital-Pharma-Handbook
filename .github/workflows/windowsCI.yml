@@ -12,9 +12,7 @@ jobs:
       runs-on: ${{ matrix.os}}
       env:
          workdir: dph
-         additional-maven-args: >
-              -Pcoveralls
-              -DrepoToken=${{secrets.COVERALLS_TOKEN}}
+         additional-maven-args: "-Pcoveralls -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report "
       strategy:
          matrix:
             os: [windows-latest]
@@ -36,6 +34,8 @@ jobs:
              restore-keys: ${{ runner.os }}-m2-
          - name: Build with Maven
            run: mvn verify ${{ matrix.additional-maven-args }}
+           env: 
+              COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
            working-directory: ${{ env.workdir }}
          - name: Generate JUnit Report
            run: >
