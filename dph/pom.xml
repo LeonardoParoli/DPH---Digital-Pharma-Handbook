@@ -303,7 +303,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<profile>
 			<id>mutation-testing</id>
 			<activation>
@@ -324,6 +324,13 @@
 
 		<profile>
 			<id>coveralls</id>
+			<dependencies>
+				<dependency>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+					<version>2.4.0-b180830.0359</version>
+				</dependency>
+			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
